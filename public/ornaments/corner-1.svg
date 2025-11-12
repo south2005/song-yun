@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <path d="M5 5 Q5 40 40 40 L5 40 L5 5 Z" fill="#d3b78e" opacity="0.8"/>
+  <path d="M10 10 Q10 35 35 35 L10 35 L10 10 Z" fill="#d3b78e" opacity="0.6"/>
+  <path d="M15 15 Q15 30 30 30 L15 30 L15 15 Z" fill="#d3b78e" opacity="0.4"/>
+  <path d="M5 40 L40 40 Q70 40 70 70 L70 95 L65 95 L65 75 Q65 50 40 50 L5 50 L5 45 L35 45 Q60 45 60 70 L60 90 L55 90 L55 75 Q55 55 35 55 L5 55 L5 40 Z" fill="#d3b78e" opacity="0.7"/>
+  <path d="M25 25 C30 15 50 20 45 35 C40 50 20 40 25 25 Z" fill="#d3b78e" opacity="0.3"/>
+</svg> 

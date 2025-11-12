@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 30" fill="none">
+  <path d="M20 15 L130 15" stroke="#d3b78e" stroke-width="1.5" opacity="0.8"/>
+  <path d="M170 15 L280 15" stroke="#d3b78e" stroke-width="1.5" opacity="0.8"/>
+  <circle cx="150" cy="15" r="10" fill="none" stroke="#d3b78e" stroke-width="1.5" opacity="0.9"/>
+  <circle cx="150" cy="15" r="6" fill="none" stroke="#d3b78e" stroke-width="1" opacity="0.7"/>
+  <circle cx="150" cy="15" r="2" fill="#d3b78e" opacity="0.8"/>
+  <path d="M40 10 Q45 5 50 10 Q55 15 60 10 Q65 5 70 10 Q75 15 80 10 Q85 5 90 10 Q95 15 100 10 Q105 5 110 10" stroke="#d3b78e" stroke-width="0.8" opacity="0.6" fill="none"/>
+  <path d="M40 20 Q45 25 50 20 Q55 15 60 20 Q65 25 70 20 Q75 15 80 20 Q85 25 90 20 Q95 15 100 20 Q105 25 110 20" stroke="#d3b78e" stroke-width="0.8" opacity="0.6" fill="none"/>
+  <path d="M190 10 Q195 5 200 10 Q205 15 210 10 Q215 5 220 10 Q225 15 230 10 Q235 5 240 10 Q245 15 250 10 Q255 5 260 10" stroke="#d3b78e" stroke-width="0.8" opacity="0.6" fill="none"/>
+  <path d="M190 20 Q195 25 200 20 Q205 15 210 20 Q215 25 220 20 Q225 15 230 20 Q235 25 240 20 Q245 15 250 20 Q255 25 260 20" stroke="#d3b78e" stroke-width="0.8" opacity="0.6" fill="none"/>
+</svg> 

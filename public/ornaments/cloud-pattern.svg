@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <path d="M10 20 Q15 15 20 20 Q25 25 30 20 Q35 15 40 20 Q45 25 50 20" stroke="#d3b78e" stroke-width="0.6" opacity="0.25" fill="none"/>
+  <path d="M10 30 Q15 25 20 30 Q25 35 30 30 Q35 25 40 30 Q45 35 50 30" stroke="#d3b78e" stroke-width="0.6" opacity="0.25" fill="none"/>
+  <path d="M10 40 Q15 35 20 40 Q25 45 30 40 Q35 35 40 40 Q45 45 50 40" stroke="#d3b78e" stroke-width="0.6" opacity="0.25" fill="none"/>
+  <path d="M15 15 C20 10 25 15 20 20 C15 25 10 20 15 15 Z" stroke="#d3b78e" stroke-width="0.5" opacity="0.2" fill="none"/>
+  <path d="M35 35 C40 30 45 35 40 40 C35 45 30 40 35 35 Z" stroke="#d3b78e" stroke-width="0.5" opacity="0.2" fill="none"/>
+  <path d="M25 25 C30 20 35 25 30 30 C25 35 20 30 25 25 Z" stroke="#d3b78e" stroke-width="0.5" opacity="0.2" fill="none"/>
+</svg> 
