@@ -1,0 +1,25 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="#d3b78e" stroke-width="1.5">
+    <path d="M5,5 Q20,5 30,15 T50,25 T70,35 T95,40" />
+    <path d="M5,5 Q5,20 15,30 T25,50 T35,70 T40,95" />
+    <circle cx="5" cy="5" r="3" fill="#d3b78e" />
+    <circle cx="30" cy="15" r="2" fill="#d3b78e" />
+    <circle cx="50" cy="25" r="2" fill="#d3b78e" />
+    <circle cx="70" cy="35" r="2" fill="#d3b78e" />
+    <circle cx="95" cy="40" r="3" fill="#d3b78e" />
+    <circle cx="15" cy="30" r="2" fill="#d3b78e" />
+    <circle cx="25" cy="50" r="2" fill="#d3b78e" />
+    <circle cx="35" cy="70" r="2" fill="#d3b78e" />
+    <circle cx="40" cy="95" r="3" fill="#d3b78e" />
+    
+    <!-- 传统图案元素 -->
+    <path d="M20,20 Q25,15 30,20 T40,20" stroke-width="1" />
+    <path d="M20,20 Q15,25 20,30 T20,40" stroke-width="1" />
+    <path d="M60,60 Q65,55 70,60 T80,60" stroke-width="1" />
+    <path d="M60,60 Q55,65 60,70 T60,80" stroke-width="1" />
+    
+    <!-- 云纹元素 -->
+    <path d="M70,10 Q75,5 80,10 Q85,15 90,10" stroke-width="1" />
+    <path d="M10,70 Q5,75 10,80 Q15,85 10,90" stroke-width="1" />
+  </g>
+</svg> 

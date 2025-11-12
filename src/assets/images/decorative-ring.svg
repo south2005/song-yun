@@ -1,0 +1,53 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 基础圆环 -->
+  <circle cx="100" cy="100" r="80" fill="none" stroke="#d3b78e" stroke-width="2" />
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#d3b78e" stroke-width="1" />
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#d3b78e" stroke-width="1" />
+  
+  <!-- 内部装饰元素 -->
+  <g fill="none" stroke="#d3b78e" stroke-width="1">
+    <!-- 北方装饰 -->
+    <path d="M100,10 L100,30" />
+    <path d="M96,12 Q100,8 104,12" />
+    <circle cx="100" cy="20" r="2" fill="#d3b78e" />
+    
+    <!-- 南方装饰 -->
+    <path d="M100,170 L100,190" />
+    <path d="M96,188 Q100,192 104,188" />
+    <circle cx="100" cy="180" r="2" fill="#d3b78e" />
+    
+    <!-- 东方装饰 -->
+    <path d="M170,100 L190,100" />
+    <path d="M188,96 Q192,100 188,104" />
+    <circle cx="180" cy="100" r="2" fill="#d3b78e" />
+    
+    <!-- 西方装饰 -->
+    <path d="M10,100 L30,100" />
+    <path d="M12,96 Q8,100 12,104" />
+    <circle cx="20" cy="100" r="2" fill="#d3b78e" />
+    
+    <!-- 东北方装饰 -->
+    <path d="M150,50 L165,35" />
+    <circle cx="157" cy="43" r="2" fill="#d3b78e" />
+    
+    <!-- 西北方装饰 -->
+    <path d="M50,50 L35,35" />
+    <circle cx="43" cy="43" r="2" fill="#d3b78e" />
+    
+    <!-- 东南方装饰 -->
+    <path d="M150,150 L165,165" />
+    <circle cx="157" cy="157" r="2" fill="#d3b78e" />
+    
+    <!-- 西南方装饰 -->
+    <path d="M50,150 L35,165" />
+    <circle cx="43" cy="157" r="2" fill="#d3b78e" />
+  </g>
+  
+  <!-- 中国传统回纹装饰 -->
+  <g stroke="#d3b78e" stroke-width="1" fill="none">
+    <path d="M75,100 Q75,87.5 87.5,87.5 Q100,87.5 100,75" />
+    <path d="M100,125 Q100,112.5 112.5,112.5 Q125,112.5 125,100" />
+    <path d="M125,100 Q125,87.5 112.5,87.5 Q100,87.5 100,75" />
+    <path d="M100,125 Q100,112.5 87.5,112.5 Q75,112.5 75,100" />
+  </g>
+</svg> 

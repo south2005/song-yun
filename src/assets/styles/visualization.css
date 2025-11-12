@@ -1,0 +1,226 @@
+/* 可视化页面共享样式 */
+.visualization-page {
+  min-height: calc(100vh - 160px);
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #f2e6d9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.visualization-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #e2c89f;
+  font-family: "LiSu", "隶书", "STLiti", "华文隶书", serif;
+  letter-spacing: 0.25rem;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  position: relative;
+  padding-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.visualization-page h1:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  width: 40%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #d3b78e, transparent);
+}
+
+.vis-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 800px;
+}
+
+.vis-selector button {
+  background: rgba(82, 44, 25, 0.6);
+  border: 1px solid rgba(211, 183, 142, 0.5);
+  color: #e2c89f;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "STFangsong", "华文仿宋", "仿宋", serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.vis-selector button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(211, 183, 142, 0.2), transparent);
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+.vis-selector button:hover:before {
+  left: 100%;
+}
+
+.vis-selector button:hover {
+  background: rgba(107, 60, 35, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  color: #f2e6d9;
+}
+
+.vis-selector button.active {
+  background: rgba(133, 74, 42, 0.9);
+  border-color: rgba(211, 183, 142, 0.8);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 15px rgba(211, 183, 142, 0.4);
+}
+
+.vis-description {
+  background: rgba(45, 28, 18, 0.7);
+  border-radius: 8px;
+  padding: 1.5rem 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  border: 1px solid rgba(211, 183, 142, 0.3);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #f2e6d9;
+  font-family: "STFangsong", "华文仿宋", "仿宋", serif;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.vis-description:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px dashed rgba(211, 183, 142, 0.2);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.vis-content {
+  background-color: rgba(45, 28, 18, 0.7);
+  border-radius: 10px;
+  padding: 2rem;
+  min-height: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(211, 183, 142, 0.3);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.vis-content:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(45, 28, 18, 0.5);
+  opacity: 0.2;
+  z-index: 0;
+  filter: blur(4px);
+}
+
+.vis-content > * {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.vis-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(45, 28, 18, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  flex-direction: column;
+}
+
+.vis-loading-text {
+  color: #d3b78e;
+  font-family: "LiSu", "隶书", "STLiti", "华文隶书", serif;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(211, 183, 142, 0.3);
+  border-radius: 50%;
+  border-top-color: #d3b78e;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .visualization-page {
+    padding: 1rem;
+  }
+  
+  .visualization-page h1 {
+    font-size: 1.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  .vis-selector {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  
+  .vis-selector button {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .vis-description {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .vis-content {
+    padding: 1rem;
+    min-height: 400px;
+  }
+} 

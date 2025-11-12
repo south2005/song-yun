@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- 外环装饰 -->
+  <circle cx="12" cy="12" r="11" fill="none" stroke="#c9a96e" stroke-width="0.8" />
+  
+  <!-- 中间花纹装饰 -->
+  <circle cx="12" cy="12" r="8" fill="none" stroke="#c9a96e" stroke-width="0.5" stroke-dasharray="2,1" />
+  
+  <!-- 中心圆点 -->
+  <circle cx="12" cy="12" r="3" fill="#c9a96e" />
+  
+  <!-- 四个方向线 -->
+  <line x1="12" y1="1" x2="12" y2="5" stroke="#c9a96e" stroke-width="0.8" />
+  <line x1="12" y1="19" x2="12" y2="23" stroke="#c9a96e" stroke-width="0.8" />
+  <line x1="1" y1="12" x2="5" y2="12" stroke="#c9a96e" stroke-width="0.8" />
+  <line x1="19" y1="12" x2="23" y2="12" stroke="#c9a96e" stroke-width="0.8" />
+  
+  <!-- 角度装饰 -->
+  <path d="M7 7 L5 5" stroke="#c9a96e" stroke-width="0.8" />
+  <path d="M17 7 L19 5" stroke="#c9a96e" stroke-width="0.8" />
+  <path d="M7 17 L5 19" stroke="#c9a96e" stroke-width="0.8" />
+  <path d="M17 17 L19 19" stroke="#c9a96e" stroke-width="0.8" />
+</svg> 
