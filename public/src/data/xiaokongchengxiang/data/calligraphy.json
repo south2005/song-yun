@@ -1,0 +1,137 @@
+{
+  "characters": [
+    {
+      "character": "轼",
+      "pinyin": "shì",
+      "meaning": "车前的横木，引申为桥",
+      "strokes_count": 8,
+      "strokes": [
+        {"id": 1, "type": "横", "description": "左右穿过，平直如砥"},
+        {"id": 2, "type": "竖", "description": "从上到下，直上直下"},
+        {"id": 3, "type": "撇", "description": "从右上向左下方撇出"},
+        {"id": 4, "type": "横", "description": "中间横画，稍短"},
+        {"id": 5, "type": "横", "description": "底部横画，与顶横呼应"},
+        {"id": 6, "type": "撇", "description": "右侧上部的撇画"},
+        {"id": 7, "type": "捺", "description": "右下方的捺画"},
+        {"id": 8, "type": "横折钩", "description": "先横后折再钩收"}
+      ],
+      "explanation": "苏轼的"轼"字，八画，是一个会意字，指车前的横木，也借指桥。苏轼名字中的'轼'代表了他的才气横溢。"
+    },
+    {
+      "character": "食",
+      "pinyin": "shí",
+      "meaning": "吃，食物",
+      "strokes_count": 9,
+      "strokes": [
+        {"id": 1, "type": "点", "description": "顶部左侧的点"},
+        {"id": 2, "type": "横", "description": "上部横画，稍短"},
+        {"id": 3, "type": "竖", "description": "中间的竖画"},
+        {"id": 4, "type": "横", "description": "中间横画"},
+        {"id": 5, "type": "撇", "description": "左侧的撇画"},
+        {"id": 6, "type": "点", "description": "右侧的点画"},
+        {"id": 7, "type": "横", "description": "下部的横画"},
+        {"id": 8, "type": "撇", "description": "左下角的撇画"},
+        {"id": 9, "type": "捺", "description": "右下角的捺画"}
+      ],
+      "explanation": "《寒食帖》中的"食"字，九画，食即吃食、食物之意。苏轼的《寒食帖》中此字写得尤为传神。"
+    },
+    {
+      "character": "清",
+      "pinyin": "qīng",
+      "meaning": "清澈，清明",
+      "strokes_count": 11,
+      "strokes": [
+        {"id": 1, "type": "点", "description": "左侧上方三点水的第一点"},
+        {"id": 2, "type": "点", "description": "左侧上方三点水的第二点"},
+        {"id": 3, "type": "点", "description": "左侧上方三点水的第三点"},
+        {"id": 4, "type": "横", "description": "右侧部首上方的横画"},
+        {"id": 5, "type": "竖", "description": "右侧部首的竖画"},
+        {"id": 6, "type": "横", "description": "中间的横画"},
+        {"id": 7, "type": "横", "description": "右侧部首中的横画"},
+        {"id": 8, "type": "竖", "description": "中间的竖画"},
+        {"id": 9, "type": "横", "description": "下部的横画"},
+        {"id": 10, "type": "横撇", "description": "左下角的横撇"},
+        {"id": 11, "type": "捺", "description": "右下角的捺画"}
+      ],
+      "explanation": "《寒食帖》中的"清"字，十一画，表示清澈、清明之意。苏轼书法中此字体现了他的清逸风格。"
+    },
+    {
+      "character": "明",
+      "pinyin": "míng",
+      "meaning": "明亮，清晰",
+      "strokes_count": 8,
+      "strokes": [
+        {"id": 1, "type": "点", "description": "左侧日字旁上部的点"},
+        {"id": 2, "type": "横", "description": "左侧日字旁上部的横"},
+        {"id": 3, "type": "竖", "description": "左侧日字旁左侧的竖"},
+        {"id": 4, "type": "横", "description": "左侧日字旁下部的横"},
+        {"id": 5, "type": "竖", "description": "左侧日字旁右侧的竖"},
+        {"id": 6, "type": "点", "description": "右侧月字旁上部的点"},
+        {"id": 7, "type": "撇", "description": "右侧月字旁的撇"},
+        {"id": 8, "type": "捺", "description": "右侧月字旁的捺"}
+      ],
+      "explanation": "《寒食帖》中的"明"字，八画，由"日"和"月"组成，表示明亮、清晰之意。苏轼写此字时明快有力。"
+    },
+    {
+      "character": "寒",
+      "pinyin": "hán",
+      "meaning": "寒冷，冰冷",
+      "strokes_count": 12,
+      "strokes": [
+        {"id": 1, "type": "点", "description": "宝盖头左上角的点"},
+        {"id": 2, "type": "横", "description": "宝盖头上部的横"},
+        {"id": 3, "type": "撇", "description": "宝盖头左侧的撇"},
+        {"id": 4, "type": "竖", "description": "宝盖头中间的竖"},
+        {"id": 5, "type": "点", "description": "宝盖头右上角的点"},
+        {"id": 6, "type": "横", "description": "中间上部的横"},
+        {"id": 7, "type": "竖", "description": "中间的竖"},
+        {"id": 8, "type": "横", "description": "中间下部的横"},
+        {"id": 9, "type": "撇", "description": "左下角的撇"},
+        {"id": 10, "type": "横", "description": "底部的横"},
+        {"id": 11, "type": "撇", "description": "右下角的撇"},
+        {"id": 12, "type": "点", "description": "右下角的点"}
+      ],
+      "explanation": "《寒食帖》中的"寒"字，十二画，表示寒冷、凄寒之意。苏轼的《寒食帖》以此字命名，书写颇具韵味。"
+    }
+  ],
+  "calligraphy_styles": [
+    {
+      "name": "行书",
+      "description": "介于楷书和草书之间的一种字体，保持了楷书的规范性，又有草书的流畅性",
+      "features": ["流畅", "自然", "连笔适中", "结构舒展"],
+      "famous_works": ["寒食帖", "兰亭集序", "祭侄文稿"]
+    },
+    {
+      "name": "楷书",
+      "description": "工整规范的标准字体，笔画清晰，结构稳定",
+      "features": ["工整", "规范", "笔画分明", "结构严谨"],
+      "famous_works": ["九成宫醴泉铭", "雁塔圣教序", "颜氏家庙碑"]
+    },
+    {
+      "name": "草书",
+      "description": "笔画连绵，形态奔放的一种字体，讲究行笔一气呵成",
+      "features": ["流动", "奔放", "连笔多", "形态变化大"],
+      "famous_works": ["十七帖", "好事帖", "苦笋帖"]
+    }
+  ],
+  "famous_calligraphers": [
+    {
+      "name": "苏轼",
+      "dynasty": "宋",
+      "description": "北宋文学家、书法家，字子瞻，号东坡居士，其书法雄浑豪放，自成一家",
+      "famous_works": ["寒食帖", "黄州寒食诗帖", "后赤壁赋"]
+    },
+    {
+      "name": "黄庭坚",
+      "dynasty": "宋",
+      "description": "北宋文学家、书法家，字鲁直，号山谷道人，与苏轼、米芾、蔡襄并称'宋四家'",
+      "famous_works": ["松风阁诗帖", "花气熏人帖", "诸上座帖"]
+    },
+    {
+      "name": "米芾",
+      "dynasty": "宋",
+      "description": "北宋书法家、画家，字元章，号襄阳漫士，其书法瘦硬秀逸，世称'米癫'",
+      "famous_works": ["蜀素帖", "珊瑚帖", "苕溪诗卷"]
+    }
+  ]
+} 

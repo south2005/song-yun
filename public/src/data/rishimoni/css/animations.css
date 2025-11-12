@@ -1,0 +1,499 @@
+/* 页面加载动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes inkSpread {
+    0% {
+        transform: scale(0);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+@keyframes brushStroke {
+    0% {
+        stroke-dashoffset: 1000;
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes paperRipple {
+    0% {
+        box-shadow: 0 0 0 rgba(158, 112, 75, 0);
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(158, 112, 75, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(158, 112, 75, 0);
+    }
+}
+
+@keyframes sealStamp {
+    0% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    75% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+}
+
+@keyframes scrollUnfold {
+    0% {
+        transform: scaleY(0.1);
+        opacity: 0;
+    }
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+/* 鹤飞过动画 */
+@keyframes craneFly {
+    0% {
+        transform: translate(-100%, 0) scale(0.5);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(100vw, -50%) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* 枫叶飘落动画 */
+@keyframes leafFall {
+    0% {
+        transform: translate(0, -50px) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 100px), calc(100vh + 50px)) rotate(var(--random-rotate, 360deg));
+        opacity: 0;
+    }
+}
+
+/* 毛笔书写特效 */
+.brush-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.brush-stroke {
+    fill: none;
+    stroke: #000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: brushStroke 2s ease forwards;
+}
+
+/* 水墨晕染特效 */
+.ink-splash {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('../assets/images/ink-splash.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 99;
+    animation: inkSpread 2s ease-out forwards;
+}
+
+/* 印章特效 */
+.seal-effect {
+    animation: sealStamp 1s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+/* 卷轴展开特效 */
+.scroll-unfold {
+    animation: scrollUnfold 1.2s ease-out forwards;
+    transform-origin: top;
+}
+
+/* 仙鹤飞过特效 */
+.crane {
+    position: absolute;
+    width: 150px;
+    height: 100px;
+    background-image: url('../assets/images/crane.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 150;
+    pointer-events: none;
+    animation: craneFly 8s linear forwards;
+}
+
+/* 枫叶飘落特效 */
+.maple-leaf {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url('../assets/images/maple-leaf.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 150;
+    pointer-events: none;
+    animation: leafFall 7s ease-in forwards;
+}
+
+/* 应用于页面元素的动画 */
+.content-layer {
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+.game-header {
+    animation: slideInLeft 1s ease-out forwards;
+}
+
+.scroll-menu {
+    animation: scrollUnfold 1.5s ease-out 0.5s forwards;
+    opacity: 0;
+}
+
+.game-area {
+    animation: slideInRight 1s ease-out 0.8s forwards;
+    opacity: 0;
+}
+
+.menu-item {
+    animation: fadeIn 0.5s ease-out forwards;
+    animation-delay: calc(var(--item-index, 0) * 0.15s + 1.2s);
+    opacity: 0;
+}
+
+.seal-mark {
+    animation: sealStamp 1.5s cubic-bezier(0.18, 0.89, 0.32, 1.28) 1.8s forwards;
+    opacity: 0;
+}
+
+/* 交互动画类 */
+.menu-item:active {
+    animation: paperRipple 0.5s ease-out;
+}
+
+.correct-answer {
+    animation: scaleUp 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.wrong-answer {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* 拖拽动画 */
+.dragging {
+    opacity: 0.8;
+    transform: scale(1.05);
+    z-index: 100;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+}
+
+/* 拼图完成动画 */
+.puzzle-completed {
+    animation: paperRipple 2s ease-out forwards;
+}
+
+/* 答对题目动画 */
+.answer-correct-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: url('../assets/images/correct-effect.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 120;
+    pointer-events: none;
+    animation: scaleUp 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards, fadeIn 0.8s ease-out forwards, fadeOut 0.8s ease-in 1.5s forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* 宋韵流芳 - 动画样式 */
+
+/* 淡入效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 淡出效果 */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* 浮动效果 */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
+
+/* 旋转效果 */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 缩放效果 */
+@keyframes scale {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* 水墨晕染效果 */
+@keyframes inkSpread {
+    0% { transform: scale(0.1); opacity: 0.9; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* 从右侧滑入 */
+@keyframes slideFromRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* 从左侧滑入 */
+@keyframes slideFromLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* 从上方滑入 */
+@keyframes slideFromTop {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 从下方滑入 */
+@keyframes slideFromBottom {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* 心跳效果 */
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1); }
+    75% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* 抖动效果 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* 闪烁效果 */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* 笔画渐现效果 */
+@keyframes strokeAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 飘叶效果 */
+@keyframes leafFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100vh + 30px)) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* 应用动画的类 */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+}
+
+.float-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+.rotate-animation {
+    animation: rotate 5s linear infinite;
+}
+
+.scale-animation {
+    animation: scale 2s ease-in-out infinite;
+}
+
+.ink-animation {
+    animation: inkSpread 1.5s ease-out forwards;
+}
+
+.slide-right {
+    animation: slideFromRight 0.5s ease-out forwards;
+}
+
+.slide-left {
+    animation: slideFromLeft 0.5s ease-out forwards;
+}
+
+.slide-top {
+    animation: slideFromTop 0.5s ease-out forwards;
+}
+
+.slide-bottom {
+    animation: slideFromBottom 0.5s ease-out forwards;
+}
+
+.heartbeat-animation {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+}
+
+.blink-animation {
+    animation: blink 2s ease-in-out infinite;
+}
+
+.stroke-animation {
+    animation: strokeAppear 0.8s ease-in-out forwards;
+}
+
+.leaf-fall {
+    animation: leafFall 8s linear forwards;
+}
+
+/* 禁用所有动画的类 */
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* 禁用游戏加载时的所有动画 */
+.game-area,
+.game-area * {
+    animation: none !important;
+    transition: none !important;
+} 

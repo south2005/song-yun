@@ -1,0 +1,128 @@
+{
+    "buildings": [
+    {
+      "name": "太原晋祠圣母殿",
+      "type": "祠庙建筑",
+      "period": "北宋",
+      "description": "晋祠圣母殿位于山西太原晋祠公园，始建于北宋，是中国现存最早的宋代木构建筑之一，以精巧的斗拱结构和精美的彩绘闻名。",
+      "features": [
+        {"id": 1, "name": "精美斗拱", "description": "斗拱结构精巧复杂，反映宋代高超的木作技艺"},
+        {"id": 2, "name": "彩绘艺术", "description": "殿内保存有宋代原始彩绘，色彩艳丽"},
+        {"id": 3, "name": "单檐歇山顶", "description": "典型的宋代庙宇屋顶形式，简洁大方"},
+        {"id": 4, "name": "前后檐廊", "description": "四周有回廊环绕，增强空间感"},
+        {"id": 5, "name": "石质台基", "description": "坚固的石质台基，体现宋代建筑技术"}
+      ],
+      "importance": "太原晋祠圣母殿是研究宋代建筑技术和艺术的珍贵实例，其木构架保存完好，提供了了解宋代营造技艺的重要实物资料。"
+    },
+    {
+      "name": "正定隆兴寺摩尼殿",
+      "type": "佛寺建筑",
+      "period": "辽宋",
+      "description": "正定隆兴寺摩尼殿位于河北正定，建于辽代末期至宋初，是中国现存较为完好的辽宋时期佛寺建筑之一，具有浓厚的北方建筑风格。",
+      "features": [
+        {"id": 1, "name": "大型斗拱", "description": "殿内斗拱高大雄伟，反映北方建筑风格"},
+        {"id": 2, "name": "双重藻井", "description": "殿内有精美的双层藻井结构，工艺精湛"},
+        {"id": 3, "name": "重檐庑殿顶", "description": "典型的北方寺庙建筑风格，气势恢宏"},
+        {"id": 4, "name": "仿宋砖雕", "description": "殿外有精美的砖雕装饰，技艺精湛"},
+        {"id": 5, "name": "宽大殿堂", "description": "空间开阔，体现北方建筑气势"}
+      ],
+      "importance": "正定隆兴寺摩尼殿是研究辽宋时期北方建筑风格的重要实例，其建筑结构和装饰艺术具有极高的研究价值。"
+    }
+  ],
+  "architecture_styles": [
+    {
+      "name": "宫殿式",
+      "description": "宋代宫殿建筑风格庄重大气，强调对称布局和等级秩序",
+      "features": ["轴线对称", "等级森严", "装饰华丽", "色彩鲜明"],
+      "famous_examples": ["大明宫", "延福宫", "崇政殿"]
+    },
+    {
+      "name": "民居式",
+      "description": "宋代民居建筑注重实用功能，以木结构为主，布局灵活",
+      "features": ["木结构", "功能实用", "格局灵活", "装饰简朴"],
+      "famous_examples": ["汴京民居", "开封府第", "平民住宅"]
+    },
+    {
+      "name": "佛寺式",
+      "description": "宋代佛寺建筑融合了佛教文化和传统建筑艺术，讲究环境营造",
+      "features": ["轴线布局", "佛教象征", "与自然融合", "精美雕刻"],
+      "famous_examples": ["相国寺", "开元寺", "净因寺"]
+    }
+  ],
+  "famous_architects": [
+    {
+      "name": "李诫",
+      "dynasty": "宋",
+      "description": "北宋建筑学家，徽宗时期的营造主管，《营造法式》的主要编撰者",
+      "famous_works": ["《营造法式》", "崇政殿", "大相国寺重建"]
+    },
+    {
+      "name": "喻皓",
+      "dynasty": "宋",
+      "description": "北宋著名工匠，精通木作技艺，参与多座宫殿和佛寺的建造",
+      "famous_works": ["延福宫", "天宁寺", "相国寺藏经楼"]
+    },
+    {
+      "name": "王元",
+      "dynasty": "宋",
+      "description": "北宋宫廷建筑师，负责皇家园林和宫殿的设计与营造，被誉为'木作圣手'",
+      "famous_works": ["御花园", "太液池", "皇家离宫"]
+    }
+  ],
+  "puzzle_games": [
+    {
+      "id": "yingzaofashi",
+      "name": "营造法式",
+      "image": "assets/images/yingzaofashi.jpg",
+      "thumbnail": "assets/images/yingzaofashi.jpg",
+      "description": "《营造法式》是北宋徽宗时期李诫编撰的一部建筑技术标准，详细记录了宋代建筑的构造技术和标准。",
+      "difficulty": "中等",
+      "pieces": 9,
+      "completion_message": "恭喜！你成功拼出了《营造法式》图像，这部著作是研究宋代建筑技术的重要史料，对后世建筑影响深远。",
+      "related_building": "营造法式",
+      "learning_points": [
+        "《营造法式》是北宋徽宗时期李诫编撰的建筑规范",
+        "详细记载了宋代建筑材料、尺度和结构标准",
+        "对斗拱进行了八个等级的详细划分",
+        "系统总结了宋代以前的建筑技术成果",
+        "是中国古代建筑技术理论的重要代表作"
+      ]
+    },
+    {
+      "id": "shengmudian",
+      "name": "太原晋祠圣母殿",
+      "image": "assets/images/shengmudian.jpg",
+      "thumbnail": "assets/images/shengmudian.jpg",
+      "description": "晋祠圣母殿位于山西太原，是中国现存最早的宋代木构建筑之一，以精巧的斗拱结构和精美彩绘闻名。",
+      "difficulty": "中等",
+      "pieces": 9,
+      "completion_message": "恭喜！你成功拼出了太原晋祠圣母殿，这座建筑是中国现存最早的宋代木构建筑之一，具有重要的历史和艺术价值。",
+      "related_building": "太原晋祠圣母殿",
+      "learning_points": [
+        "晋祠圣母殿建于北宋，是研究宋代建筑的重要实例",
+        "殿内斗拱结构精巧，反映宋代高超的木作技艺",
+        "保存有宋代原始彩绘，色彩艳丽，题材丰富",
+        "采用单檐歇山顶的设计，简洁而大方",
+        "四周有回廊环绕，增强空间感和实用性"
+      ]
+    },
+    {
+      "id": "monidian",
+      "name": "正定隆兴寺摩尼殿",
+      "image": "assets/images/monidian.jpg",
+      "thumbnail": "assets/images/monidian.jpg",
+      "description": "正定隆兴寺摩尼殿位于河北正定，建于辽末宋初，是中国现存较为完好的辽宋时期佛寺建筑之一。",
+      "difficulty": "困难",
+      "pieces": 9,
+      "completion_message": "恭喜！你成功拼出了正定隆兴寺摩尼殿，这座辽宋时期的建筑代表了北方佛寺建筑的典型风格。",
+      "related_building": "正定隆兴寺摩尼殿",
+      "learning_points": [
+        "隆兴寺摩尼殿建于辽末宋初，融合了北方建筑特色",
+        "殿内有精美的双层藻井结构，工艺精湛",
+        "采用重檐庑殿顶设计，气势恢宏",
+        "殿外有精美的砖雕装饰，展现北方建筑艺术",
+        "宽大的殿堂空间，体现北方建筑的开阔气势"
+      ]
+    }
+  ]
+} 

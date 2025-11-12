@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名家介绍 - 宋代诗画馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+            overflow: hidden;
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            width: 100vw; /* 确保不会超出视口宽度 */
+        }
+        
+        .museum-header {
+            background-color: rgba(33, 26, 15, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .main-navigation {
+            width: 70%;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: space-between;
+        }
+        
+        .nav-item {
+            margin: 0;
+            position: relative;
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: var(--museum-light);
+            font-size: 16px;
+            padding: 15px 5px;
+            display: block;
+            transition: all 0.3s;
+            position: relative;
+            letter-spacing: 2px;
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-item a:hover::after {
+            width: 80%;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transform: translateX(-50%);
+        }
+        
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--header-height);
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            padding: 20px 0;
+            text-align: center;
+            margin: 0;
+        }
+        
+        .museum-footer {
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(33, 26, 15, 0.95);
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+        
+        /* 视频风格展示区域 - 全屏布局 */
+        .video-style-showcase {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - var(--header-height) - var(--footer-height));
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .video-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+            background-color: transparent;
+        }
+        
+        .video-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .slide-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
+            z-index: 1;
+            filter: brightness(0.9) contrast(1.1);
+        }
+        
+        /* 左侧区域布局 */
+        .slide-content-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            width: 90%;
+            max-width: 1400px;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            gap: 40px;
+        }
+        
+        /* 左侧标题区域 */
+        .slide-left-area {
+            width: 30%;
+            opacity: 1;
+            transition: none;
+        }
+        
+        .video-slide.active .slide-left-area {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .title-container {
+            background-color: rgba(0, 0, 0, 0);
+            padding: 35px 40px;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+            border-left: 2px solid var(--museum-gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+            transition: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .title-container:hover {
+            transform: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+        }
+        
+        .slide-year {
+            color: var(--museum-gold);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-year::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--museum-gold);
+            opacity: 0.7;
+        }
+        
+        .slide-title {
+            color: var(--museum-gold);
+            font-size: 2.8rem;
+            line-height: 1.3;
+            margin: 0;
+            padding: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 右侧内容区域 */
+        .slide-right-area {
+            width: 50%;
+            opacity: 1;
+            transition: none;
+        }
+        
+        .video-slide.active .slide-right-area {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .content-container {
+            background-color: rgba(0, 0, 0, 0);
+            padding: 35px 40px;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+            border-left: 2px solid var(--museum-gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+            transition: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .content-container:hover {
+            transform: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+        }
+        
+        .slide-text {
+            color: var(--museum-light);
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 1);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        /* 底部大标题 */
+        .main-heading {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            text-align: center;
+            z-index: 5;
+        }
+        
+        .main-heading h1 {
+            font-size: 3.8rem;
+            color: var(--museum-gold);
+            margin: 0;
+            padding: 0;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            letter-spacing: 5px;
+            opacity: 0.85;
+        }
+        
+        .slide-nav-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+            transform: translateY(-50%);
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
+        
+        .slide-nav-button {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--museum-light);
+            border: 1px solid rgba(212, 185, 110, 0.4);
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        
+        .slide-nav-button:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.5);
+            border-color: var(--museum-gold);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25), 0 0 10px rgba(212, 185, 110, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .slide-nav-button:focus {
+            outline: none;
+        }
+        
+        .slide-nav-button::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: currentColor;
+            transition: all 0.2s ease;
+        }
+        
+        .slide-nav-button.prev-slide::after {
+            border-right: 0;
+            border-top: 0;
+            transform: rotate(45deg);
+            margin-left: 4px;
+        }
+        
+        .slide-nav-button.next-slide::after {
+            border-left: 0;
+            border-bottom: 0;
+            transform: rotate(45deg);
+            margin-right: 4px;
+        }
+        
+        .navigation-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 10;
+            padding: 10px 15px;
+        }
+        
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            margin: 0 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-dot.active {
+            background-color: var(--museum-gold);
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(212, 185, 110, 0.7);
+        }
+        
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .video-slide.active {
+            animation: fadeInScale 1s forwards;
+        }
+        
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--museum-gold), #e6d4a3);
+            width: 0;
+            z-index: 10;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(212, 185, 110, 0.5);
+        }
+        
+        /* 媒体查询，响应式布局 */
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding-left: 40px;
+            }
+            
+            .slide-left-area {
+                width: 60%;
+                margin-bottom: 30px;
+            }
+            
+            .slide-right-area {
+                width: 80%;
+            }
+            
+            .main-heading {
+                bottom: 120px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide-left-area, .slide-right-area {
+                width: 90%;
+            }
+            
+            .slide-title {
+                font-size: 2.5rem;
+            }
+            
+            .slide-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-heading h1 {
+                font-size: 3rem;
+            }
+        }
+        
+        /* 添加侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 1000;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .side-navigation .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .side-navigation .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+            padding: 0;
+        }
+        
+        .side-navigation .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .side-navigation .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .side-navigation .nav-item a:hover::before,
+        .side-navigation .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .side-navigation .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .side-navigation .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .side-navigation .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .side-navigation .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .side-navigation .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .side-navigation .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .side-navigation .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .side-navigation .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <!-- 移除此处的logo，已经移到侧边栏 -->
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">宋代诗画馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/mozi/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item active"><a href="/src/data/mozi/exhibitions.html"><i></i><span>名家介绍</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/collection.html"><i></i><span>诗词赏析</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/events.html"><i></i><span>绘画作品</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/education.html"><i></i><span>艺术评论</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 视频风格展示区域 - 全屏布局 -->
+            <div class="video-style-showcase">
+                <div class="progress-bar" id="progressBar"></div>
+                
+                <div class="video-slide active">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2mozidansheng.jpg" alt="苏轼" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1037-1101</div>
+                                        <h2 class="slide-title">苏轼</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字子瞻，号东坡居士，眉州眉山人。北宋文学家、政治家、书法家、画家。诗词、散文、书法、绘画俱佳，是宋代文学艺术的集大成者。其词开创豪放一派，散文成就极高，书法自成一家，绘画以竹石见长。代表作有《赤壁赋》、《念奴娇·赤壁怀古》等。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2xuexirujiaxueshuo.jpg" alt="欧阳修" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1007-1072</div>
+                                        <h2 class="slide-title">欧阳修</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字永叔，号醉翁，庐陵人。北宋文学家、政治家。散文成就极高，开创了"文以载道"的新境界。其文风平易近人，语言优美，意境清新。代表作有《醉翁亭记》、《秋声赋》等。在诗词创作上也有很高成就，是宋代文坛的领袖人物。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2chuanglimojiaxuepai.jpg" alt="王安石" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1021-1086</div>
+                                        <h2 class="slide-title">王安石</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字介甫，号半山，临川人。北宋政治家、文学家、思想家。其散文以议论见长，语言简练，说理透彻。诗词创作也有很高成就，风格清新自然。代表作有《答司马谏议书》、《泊船瓜洲》等。是宋代政治改革的重要推动者。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2youshuizhuhou.jpg" alt="曾巩" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1019-1083</div>
+                                        <h2 class="slide-title">曾巩</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字子固，号南丰，南丰人。北宋文学家。散文成就极高，以议论见长，说理透彻，语言简练。其文风严谨，结构严密，是宋代散文的重要代表。代表作有《墨池记》、《寄欧阳舍人书》等。与欧阳修并称"欧曾"。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2zuzhichugongsong.jpg" alt="苏洵" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1009-1066</div>
+                                        <h2 class="slide-title">苏洵</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字明允，号老泉，眉州眉山人。北宋文学家，苏轼、苏辙之父。散文成就极高，以议论见长，说理透彻，语言简练。其文风雄健，气势磅礴。代表作有《六国论》、《管仲论》等。与两个儿子合称"三苏"。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2fazhankexuejishu.jpg" alt="苏辙" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">1039-1112</div>
+                                        <h2 class="slide-title">苏辙</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字子由，号颍滨遗老，眉州眉山人。北宋文学家，苏轼之弟。散文成就极高，以议论见长，说理透彻，语言简练。其文风平实，结构严谨。代表作有《黄州快哉亭记》、《上枢密韩太尉书》等。与父兄合称"三苏"。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2mojiazhuzhifazhan.jpg" alt="韩愈" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">768-824</div>
+                                        <h2 class="slide-title">韩愈</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字退之，号昌黎，河阳人。唐代文学家，被尊为"唐宋八大家"之首。散文成就极高，开创了"文以载道"的传统。其文风雄健，气势磅礴，说理透彻。代表作有《师说》、《进学解》等。对宋代文学影响深远。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/mozi/images/2moziqushi.jpg" alt="柳宗元" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">773-819</div>
+                                        <h2 class="slide-title">柳宗元</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">字子厚，号河东，河东人。唐代文学家，与韩愈并称"韩柳"。散文成就极高，以议论见长，说理透彻，语言简练。其文风清新，意境深远。代表作有《捕蛇者说》、《永州八记》等。对宋代文学影响深远。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slide-nav-buttons">
+                    <button class="slide-nav-button prev-slide"></button>
+                    <button class="slide-nav-button next-slide"></button>
+                </div>
+                
+                <div class="navigation-controls">
+                    <div class="nav-dot active" data-slide="0"></div>
+                    <div class="nav-dot" data-slide="1"></div>
+                    <div class="nav-dot" data-slide="2"></div>
+                    <div class="nav-dot" data-slide="3"></div>
+                    <div class="nav-dot" data-slide="4"></div>
+                    <div class="nav-dot" data-slide="5"></div>
+                    <div class="nav-dot" data-slide="6"></div>
+                    <div class="nav-dot" data-slide="7"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© 2025 诗画展览馆（宋韵智境——数字幻境启宋韵项目）版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.video-slide');
+            const dots = document.querySelectorAll('.nav-dot');
+            const prevBtn = document.querySelector('.prev-slide');
+            const nextBtn = document.querySelector('.next-slide');
+            const progressBar = document.getElementById('progressBar');
+            
+            // 先设置所有幻灯片的卡片透明度一致
+            slides.forEach(slide => {
+                const leftArea = slide.querySelector('.slide-left-area');
+                const rightArea = slide.querySelector('.slide-right-area');
+                if (leftArea) {
+                    leftArea.style.opacity = '1';
+                    leftArea.style.transform = 'none';
+                }
+                if (rightArea) {
+                    rightArea.style.opacity = '1';
+                    rightArea.style.transform = 'none';
+                }
+            });
+            
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDelay = 5000; // 5秒切换一次
+            
+            // 初始化进度条动画
+            let progress = 0;
+            let progressInterval;
+            
+            function resetProgressBar() {
+                clearInterval(progressInterval);
+                progress = 0;
+                progressBar.style.width = '0%';
+                
+                progressInterval = setInterval(() => {
+                    progress += 100 / (slideDelay / 100);
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        nextSlide(); // 进度条拉满后自动切换到下一页
+                    }
+                }, 100);
+            }
+            
+            function showSlide(n) {
+                // 隐藏当前幻灯片
+                slides[currentSlide].classList.remove('active');
+                dots[currentSlide].classList.remove('active');
+                
+                // 更新当前幻灯片索引
+                currentSlide = (n + slides.length) % slides.length;
+                
+                // 显示新的幻灯片
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+                
+                // 重置进度条
+                resetProgressBar();
+            }
+            
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+            
+            function prevSlide() {
+                showSlide(currentSlide - 1);
+            }
+            
+            // 设置自动播放
+            function startSlideShow() {
+                slideInterval = setInterval(nextSlide, slideDelay);
+                resetProgressBar();
+            }
+            
+            // 点击事件监听
+            prevBtn.addEventListener('click', function() {
+                prevSlide();
+                clearInterval(slideInterval);
+                startSlideShow();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                nextSlide();
+                clearInterval(slideInterval);
+                startSlideShow();
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    showSlide(index);
+                    clearInterval(slideInterval);
+                    startSlideShow();
+                });
+            });
+            
+            // 启动幻灯片自动播放
+            startSlideShow();
+            
+            // 当用户鼠标悬停在幻灯片上时暂停播放
+            const showcaseElement = document.querySelector('.video-style-showcase');
+            showcaseElement.addEventListener('mouseenter', function() {
+                clearInterval(slideInterval);
+                clearInterval(progressInterval);
+            });
+            
+            showcaseElement.addEventListener('mouseleave', function() {
+                startSlideShow();
+            });
+        });
+    </script>
+</body>
+</html>

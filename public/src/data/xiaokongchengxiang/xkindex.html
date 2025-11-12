@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宋韵流芳 - 宋代诗情画意游戏</title>
+   
+    <style>
+        /* 全局古风字体设置 */
+        @font-face {
+            font-family: 'AncientSong';
+            src: url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+        }
+        
+        body, button, input, textarea, p, div, span, h1, h2, h3, h4, h5, h6 {
+            font-family: 'KaiTi', 'FangSong', 'SimSun', serif !important;
+            letter-spacing: 2px !important;
+            line-height: 1.7 !important;
+        }
+        
+        /* 标题文字特殊古风处理 */
+        h1, h2, h3, .game-title, .title, .main-title, .start-title, button, .dialogue-option, .continue-button, .npc-name {
+            font-family: 'Ma Shan Zheng', 'KaiTi', 'FangSong', serif !important;
+            letter-spacing: 4px !important;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        /* 对话文本古风处理 */
+        .dialogue-text {
+            font-family: 'FangSong', 'KaiTi', 'SimSun', serif !important;
+            letter-spacing: 3px !important;
+            text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        /* 立即禁用所有动画和过渡效果 */
+        body * {
+            animation: none !important;
+            transition: none !important;
+        }
+        
+        /* 确保游戏区域元素不会闪烁 */
+        .game-area {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            transform: none !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            animation: none !important;
+            transition: none !important;
+            display: none !important; /* 确保初始状态完全隐藏 */
+            visibility: hidden !important; /* 双重保险隐藏 */
+            opacity: 0 !important; /* 三重保险隐藏 */
+            border-radius: 0 !important; /* 移除圆角 */
+            box-shadow: none !important; /* 移除阴影 */
+            background-color: transparent !important; /* 透明背景 */
+            padding: 0 !important; /* 移除内边距 */
+            overflow: auto !important;
+        }
+        
+        /* 确保游戏区域显示时的样式 */
+        .game-area:not(.hidden) {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* 确保隐藏元素不会有任何动画效果 */
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            animation: none !important;
+            transition: none !important;
+            opacity: 0 !important;
+        }
+        
+        /* 默认隐藏所有游戏内容 */
+        .game-content {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        
+        /* 只有当游戏内容不是隐藏状态时才显示 */
+        .game-content:not(.hidden) {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: 100% !important;
+            width: 100% !important;
+            background-color: transparent !important; /* 确保游戏内容背景透明 */
+        }
+
+        /* 全屏背景 */
+        .full-screen-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* 背景图片 */
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        /* 游戏规则容器样式 - 居中显示在全屏界面 */
+        .rules-container {
+            background-color: rgba(255, 248, 220, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            padding: 30px 40px;
+            max-width: 800px;
+            width: 80%;
+            margin: 50px auto;
+            position: relative;
+            border: 2px solid #a67c52;
+        }
+        
+        /* 游戏规则标题 */
+        .game-rules-title {
+            color: #732e1c;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-family: 'SimSun', serif;
+            border-bottom: 2px solid #a67c52;
+            padding-bottom: 15px;
+            letter-spacing: 2px;
+        }
+        
+        /* 规则内容样式 */
+        .game-rules-content {
+            color: #5a3d30;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: justify;
+            margin: 0 0 30px 0;
+            letter-spacing: 1px;
+        }
+        
+        /* 规则内容中的强调文字 */
+        .game-rules-content strong {
+            color: #732e1c;
+            font-weight: bold;
+        }
+        
+        /* 规则列表样式 */
+        .game-rules-content br {
+            display: block;
+            content: "";
+            margin-top: 15px;
+        }
+        
+        /* 规则页面按钮区域 */
+        .rules-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        /* 进入游戏按钮 */
+        .enter-game-button {
+            background-color: #a67c52;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 3px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .enter-game-button:hover {
+            background-color: #8c6e5d;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 返回按钮样式 */
+        .back-button {
+            background-color: #732e1c;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .back-button:hover {
+            background-color: #5a2516;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 游戏入口卡片样式 */
+        .game-entry {
+            position: absolute;
+            width: 120px;
+            height: 180px;
+            background-color: rgba(245, 240, 230, 0.9);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 10;
+            border: 1px solid #8c6e5d;
+            padding: 0;
+            backdrop-filter: blur(2px);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.03"><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,80)"/></svg>');
+        }
+
+        /* 卡片顶部装饰 */
+        .game-entry::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background-color: #8c6e5d;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%);
+        }
+        
+        /* 卡片底部装饰 - 类似于印章效果 */
+        .game-entry::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(180, 40, 40, 0.7);
+            border-radius: 3px;
+            transform: rotate(45deg);
+            opacity: 0.8;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2) inset;
+        }
+
+        /* 按钮文字样式 */
+        .game-entry-text {
+            writing-mode: vertical-rl;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-family: 'SimSun', serif;
+            margin-top: 15px;
+            z-index: 2;
+            letter-spacing: 3px;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        /* 图标样式 */
+        .entry-icon {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 5px;
+        }
+        
+        .entry-icon img {
+            border: 2px solid #8c6e5d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .game-entry:hover .entry-icon img {
+            transform: scale(1.05);
+        }
+        
+        /* 标题样式 */
+        .entry-title {
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 悬停效果 */
+        .game-entry:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 开始游戏界面 - 全屏显示 */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('assets/images/shouyebeijing.jpg'); 
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        .start-content {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 500px;
+            border: 1px solid #8c6e5d;
+            position: relative;
+        }
+
+        .start-title {
+            color: #732e1c;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-family: 'SimSun', serif;
+            letter-spacing: 2px;
+        }
+
+        .start-description {
+            color: #5a3d30;
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .start-button {
+            background-color: #a67c52;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .start-button:hover {
+            background-color: #8c6e5d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 规则子标题样式 */
+        .rules-subtitle {
+            color: #732e1c;
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            border-left: 4px solid #a67c52;
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        /* 规则列表样式 */
+        .rules-list {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .rules-list li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 5px;
+        }
+
+        /* 介绍文本样式 */
+        .intro-text {
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #5a3d30;
+            padding: 10px;
+            background-color: rgba(255, 248, 220, 0.5);
+            border-radius: 8px;
+        }
+
+        /* 小贴士样式 */
+        .tips-text {
+            background-color: rgba(255, 240, 200, 0.7);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border-left: 4px solid #e6a23c;
+            font-size: 15px;
+        }
+        
+        /* NPC对话场景样式 */
+        .dialogue-scene {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            background-image: url('assets/images/dialogue_bg.jpg');
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 对话框容器 */
+        .scroll-container {
+            position: relative;
+            width: 80%;
+            max-width: 1000px;
+            margin: 0 auto;
+            bottom: 200px;
+        }
+        
+        /* NPC角色容器 */
+        .npc-container {
+            position: absolute;
+            bottom: 0;
+            width: 200px;
+            height: 300px;
+        }
+        
+        /* 左侧NPC */
+        .left-npc {
+            left: 0;
+        }
+        
+        /* 右侧NPC */
+        .right-npc {
+            right: 0;
+        }
+        
+        /* NPC图像 */
+        .npc-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* 对话框容器 */
+        .dialogue-box {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 2px solid #20692e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 对话框装饰 */
+        .dialogue-box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            height: 30px;
+            background-color: #20692e;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            z-index: 0;
+        }
+        
+        /* 对话文本 */
+        .dialogue-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 对话选项容器 */
+        .dialogue-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            z-index: 10;
+            width: 15%;
+            max-width: 800px;
+            margin: 1px auto 20px auto; /* 调整为正值，使按钮下移到对话框下方 */
+        }
+        
+        /* 对话选项按钮 */
+        .dialogue-option {
+            background-color: #f5f0e6;
+            border: 1px solid #20692e;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        
+        .dialogue-option:hover {
+            background-color: #e6d9c0;
+            transform: translateY(-2px);
+        }
+        
+        /* NPC称号样式 */
+        .npc-title {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+            font-style: italic;
+            letter-spacing: 1px;
+            display: block; /* 确保元素显示为块级元素 */
+            visibility: visible !important; /* 强制可见 */
+            opacity: 1 !important; /* 强制不透明 */
+        }
+        
+        /* 确保右侧NPC标题也能正确显示 */
+        .right-npc .npc-title {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative;
+            z-index: 5; /* 提高层级 */
+        }
+        
+        /* 挑战选项按钮样式 */
+        .challenge-option {
+            border: 3px solid #cc2929 !important; /* 红色边框 */
+            background-color: rgba(255, 240, 240, 0.9) !important; /* 浅红色背景 */
+            color: #cc2929 !important; /* 红色文字 */
+            font-weight: bold !important;
+            font-size: 18px !important;
+            text-align: center !important;
+            padding: 12px 20px !important;
+            margin: 15px auto !important;
+            max-width: 50% !important; /* 减小宽度 */
+            box-shadow: 0 3px 8px rgba(204, 41, 41, 0.3) !important;
+            animation: pulse-red 2s infinite !important; /* 呼吸动画 */
+        }
+        
+        .challenge-option:hover {
+            background-color: rgba(255, 220, 220, 0.95) !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 5px 15px rgba(204, 41, 41, 0.5) !important;
+        }
+        
+        /* 红色呼吸动画 */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(204, 41, 41, 0.5); }
+            70% { box-shadow: 0 0 0 10px rgba(204, 41, 41, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(204, 41, 41, 0); }
+        }
+        
+        /* 对话按钮区域 */
+        .dialogue-button-area {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 5px 0;
+            position: relative;
+            z-index: 100;
+        }
+        
+        /* 美化继续按钮 */
+        .continue-button {
+            background: linear-gradient(to bottom, #c93636, #a52929);
+            color: #fff;
+            border: 2px solid #8a1c1c;
+            border-radius: 30px;
+            padding: 12px 45px;
+            font-size: 22px;
+            font-family: 'KaiTi', 'SimSun', serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: visible;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            margin: 20px auto;
+            display: block;
+            width: auto;
+            min-width: 150px;
+            z-index: 1000;
+        }
+        
+        /* 按钮悬停效果 */
+        .continue-button:hover {
+            background: linear-gradient(to bottom, #e24343, #c13232);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 按钮点击效果 */
+        .continue-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 按钮装饰 - 两侧的古风装饰线 */
+        .continue-button::before,
+        .continue-button::after {
+            content: "✦";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 20px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.7);
+        }
+        
+        .continue-button::before {
+            left: 15px;
+        }
+        
+        .continue-button::after {
+            right: 15px;
+        }
+
+        /* scroll-dialogue-box样式 */
+        .scroll-dialogue-box {
+            position: relative;
+            width: 85%;
+            margin: 30px auto;
+            background-color: rgba(255, 250, 240, 0.95);
+            border: 3px solid #8c6e5d;
+            border-radius: 15px;
+            padding: 25px 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+        }
+        
+        /* 对话内容容器 */
+        .dialogue-content {
+            position: relative;
+            min-height: 120px;
+            padding: 15px 5px;
+        }
+        
+        /* 说话者标识框样式 */
+        .speaker-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            background-color: #8c6e5d;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            position: absolute;
+            top: -15px;
+            z-index: 5;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        .left-speaker-box {
+            left: 20px;
+        }
+        
+        .right-speaker-box {
+            right: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- 游戏直接从规则界面开始 -->
+
+    <div class="container">
+        <!-- 背景图片 -->
+        <div class="full-screen-bg">
+            <img src="assets/images/shouyebeijing.jpg" alt="宋代山水画" class="bg-image">
+            <div class="paper-texture" style="opacity: 0.3;"></div>
+        </div>
+        
+        <!-- 游戏区域 -->
+        <main class="game-area hidden" style="display:none; visibility:hidden;">
+            <!-- 游戏规则区域 -->
+            <div id="game-rules" class="game-content hidden" style="display:none; visibility:hidden; width: 100%; height: 100%; position: relative; background-image: url('assets/images/shouyebeijing.jpg'); background-size: cover; background-position: center;">
+                <!-- 卷轴背景 -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; max-width: 800px; height: 60%; background-image: url('assets/images/youxiguize.jpg'); background-size: 100%; background-position: center; background-repeat: no-repeat;">
+                    <!-- 标题 - 在卷轴顶部 -->
+                    <div style="position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 50%; text-align: center;">
+                        <h2 style="color: #000; font-size: 28px; font-family: 'KaiTi', 'SimSun', serif; font-weight: bold; margin: 0; letter-spacing: 5px;">游戏规则
+                            
+                        </h2>
+                    </div>
+                    
+                    <!-- 内容区域 - 卷轴中央的文本 -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%); width: 70%; max-width: 700px;">
+                        <p style="color: #333; font-size: 18px; line-height: 1.6; font-family: 'SimSun', serif; text-align: left; margin: 0;">
+                            在这个游戏中，您将作为现代的云梦人穿越回宋代，与北宋文豪苏轼面对面交流，探讨诗词书画艺术，并接受《寒食帖》诗词鉴赏与找错的挑战任务。
+                            <br><br>
+                            您将与苏轼对话，了解其传世名作《水调歌头》、《赤壁赋》背后的故事，以及"诗中有画，画中有诗"的艺术理念。在完成对话后，您将参与《寒食帖》找茬游戏，在两幅看似相同的诗词作品中找出所有差异，最后欣赏这件被誉为"天下第三行书"的艺术珍品。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 进入按钮 - 右下角 -->
+                <div style="position: absolute; bottom: 15%; right: 15%;" onclick="startGame('dialogue')">
+                    <button id="enter-game-btn" style="background: #333; border: none; border-radius: 50%; width: 80px; height: 80px; cursor: pointer; position: relative; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);">
+                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 24px; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">进入</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- NPC对话场景 -->
+            <div id="dialogue-scene" class="game-content hidden" style="display:none; visibility:hidden;">
+
+                    <!-- 对话框 -->
+                    <div class="scroll-container">
+                        <!-- 左侧NPC -->
+                        <div class="npc-container left-npc" id="sushi-container">
+                            <div class="character-frame"></div>
+                            <img src="assets/images/scholar.jpg" alt="苏轼" class="npc-image" id="su-shi">
+                            <div class="npc-name">苏轼</div>
+                        </div>
+                        
+                        <div class="scroll-dialogue-box">
+                            <!-- 对话内容 -->
+                            <div class="dialogue-content">
+                                <!-- 说话者标识框 -->
+                                <div class="speaker-indicator left-speaker-box" id="left-speaker">苏轼</div>
+                                <div class="speaker-indicator right-speaker-box" id="right-speaker">云梦人</div>
+                                
+                                <!-- 对话文本 -->
+                                <p id="left-text" class="dialogue-text left-text"></p>
+                                <p id="right-text" class="dialogue-text right-text"></p>
+                                
+                                <!-- 继续按钮区域 - 移到对话框内部 -->
+                                <div class="dialogue-button-area">
+                                    <button class="continue-button" id="continue-btn">继续</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 右侧NPC -->
+                        <div class="npc-container right-npc" id="huang-container">
+                            <div class="character-frame"></div>
+                            <img src="assets/images/calligrapher.jpg" alt="云梦人" class="npc-image" id="current-npc">
+                            <div class="npc-name">云梦人</div>
+                        </div>
+                        
+                        <!-- 隐藏的NPC数据元素 -->
+                        <div id="current-npc" style="display:none"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 书法找茬游戏区域 -->
+            <div id="calligraphy-game" class="game-content hidden" style="display:none; visibility:hidden; position: relative;">
+                <!-- 游戏区域将由JavaScript动态生成 -->
+            </div>
+            
+            <!-- 作品展示区域 -->
+            <div id="artwork-display" class="game-content hidden" style="display:none; visibility:hidden; position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000;"></div>
+        </main>
+    </div>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/calligraphy.js"></script>
+    <script src="js/dialogue.js"></script>
+    <script>
+        console.log("调试脚本已加载");
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 监控原始的"我愿意接受挑战"按钮
+            const acceptChallengeBtn = document.getElementById('accept-challenge-btn');
+            if (acceptChallengeBtn) {
+                const originalOnClick = acceptChallengeBtn.onclick;
+                acceptChallengeBtn.onclick = function(e) {
+                    console.log("拦截到'我愿意接受挑战'按钮点击事件");
+                    if (originalOnClick) {
+                        console.log("执行原始onclick事件");
+                        originalOnClick.call(this, e);
+                    }
+                };
+                
+                console.log("已监控'我愿意接受挑战'按钮");
+            } else {
+                console.warn("找不到'我愿意接受挑战'按钮");
+            }
+        });
+    </script>
+</body>
+</html>

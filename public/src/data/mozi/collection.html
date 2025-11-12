@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词赏析 - 宋代诗画馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .museum-header {
+            background-color: rgba(20, 16, 10, 0.85);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .logo-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+        }
+        
+        /* 侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 200;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .nav-item a:hover::before,
+        .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+        
+        .page-content {
+            padding: 100px 30px 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+            padding-bottom: 15px;
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .story-card {
+            background-color: rgba(33, 26, 15, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(212, 185, 110, 0.2);
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--museum-gold);
+        }
+        
+        .story-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
+            padding: 20px;
+        }
+        
+        .story-title {
+            color: var(--museum-gold);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .story-text {
+            margin: 0;
+            line-height: 1.7;
+        }
+        
+        .featured-story {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid var(--museum-gold);
+        }
+        
+        .featured-story-content {
+            flex: 2;
+        }
+        
+        .featured-story-image {
+            flex: 1;
+            height: 250px;
+            margin-left: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .featured-story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .museum-footer {
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <!-- 移除此处的logo，已经移到侧边栏 -->
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">宋代诗画馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/mozi/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/exhibitions.html"><i></i><span>名家介绍</span></a></li>
+                <li class="nav-item active"><a href="/src/data/mozi/collection.html"><i></i><span>诗词赏析</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/events.html"><i></i><span>绘画作品</span></a></li>
+                <li class="nav-item"><a href="/src/data/mozi/education.html"><i></i><span>艺术评论</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <h1 class="section-title">诗词赏析</h1>
+            
+            <div class="featured-story">
+                <div class="featured-story-content">
+                    <h2 class="story-title">苏轼《念奴娇·赤壁怀古》</h2>
+                    <p class="story-text">这首词作于宋神宗元丰五年（1082年），是苏轼在黄州贬谪期间所作。词中"大江东去，浪淘尽，千古风流人物"一句，气势磅礴，展现了作者对历史兴衰的深刻思考。全词以赤壁之战为背景，通过对历史人物的追忆，抒发了作者对人生、历史的感悟。词中"人生如梦，一尊还酹江月"的感慨，展现了苏轼豁达的人生态度和深邃的思想境界。</p>
+                </div>
+                <div class="featured-story-image">
+                    <img src="/src/data/mozi/images/3moziquanshuofenshui.jpg" alt="苏轼《念奴娇·赤壁怀古》意境图">
+                </div>
+            </div>
+            
+            <div class="story-grid">
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozidenglouzuchugongsong.jpg" alt="李清照《声声慢》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">李清照《声声慢》</h3>
+                        <p class="story-text">"寻寻觅觅，冷冷清清，凄凄惨惨戚戚。乍暖还寒时候，最难将息。"这首词以细腻的笔触描绘了深秋时节的萧瑟景象，通过叠字的运用，展现了词人内心的孤寂与哀愁。词中"这次第，怎一个愁字了得"的感叹，道出了千古离人的共同心声，展现了李清照独特的艺术风格。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozizhizuomuyuan.jpg" alt="辛弃疾《破阵子·为陈同甫赋壮词以寄之》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">辛弃疾《破阵子·为陈同甫赋壮词以寄之》</h3>
+                        <p class="story-text">"醉里挑灯看剑，梦回吹角连营。八百里分麾下炙，五十弦翻塞外声。"这首词以豪放的笔触描绘了军旅生活，展现了作者对收复失地的渴望。词中"了却君王天下事，赢得生前身后名"的壮志，体现了辛弃疾豪放词风的特色，是宋代词坛的经典之作。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozizhengkongshiyan.jpg" alt="范仲淹《渔家傲·秋思》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">范仲淹《渔家傲·秋思》</h3>
+                        <p class="story-text">"塞下秋来风景异，衡阳雁去无留意。四面边声连角起，千嶂里，长烟落日孤城闭。"这首词以边塞秋景为背景，抒发了作者对边关将士的深切关怀。词中"浊酒一杯家万里，燕然未勒归无计"的感慨，展现了范仲淹忧国忧民的情怀，是宋代边塞词的代表作。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozishoucheng.jpg" alt="欧阳修《蝶恋花·庭院深深深几许》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">欧阳修《蝶恋花·庭院深深深几许》</h3>
+                        <p class="story-text">"庭院深深深几许，云窗雾阁春迟。为谁憔悴损芳姿，夜来清梦好，应是发南枝。"这首词以婉约的笔触描绘了深闺女子的愁绪，通过细腻的景物描写，展现了词人对美好生活的向往。词中"泪眼问花花不语，乱红飞过秋千去"的意境，体现了欧阳修婉约词风的特色。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozhetuandui.jpg" alt="柳永《望海潮·东南形胜》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">柳永《望海潮·东南形胜》</h3>
+                        <p class="story-text">"东南形胜，三吴都会，钱塘自古繁华。烟柳画桥，风帘翠幕，参差十万人家。"这首词以杭州为背景，描绘了江南水乡的繁华景象。词中"云树绕堤沙，怒涛卷霜雪，天堑无涯"的壮阔景象，展现了柳永豪放词风的特色，是宋代都市词的代表作。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/mozi/images/3mozixuetu.jpg" alt="晏殊《蝶恋花·槛菊愁烟兰泣露》意境图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">晏殊《蝶恋花·槛菊愁烟兰泣露》</h3>
+                        <p class="story-text">"槛菊愁烟兰泣露，罗幕轻寒，燕子双飞去。明月不谙离恨苦，斜光到晓穿朱户。"这首词以婉约的笔触描绘了秋日离愁，通过细腻的景物描写，展现了词人对离别的感伤。词中"昨夜西风凋碧树，独上高楼，望尽天涯路"的意境，体现了晏殊婉约词风的特色，是宋代词坛的经典之作。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© 2025 宋代诗画馆（宋韵智境——数字幻境启宋韵项目）版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html> 

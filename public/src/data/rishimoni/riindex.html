@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宋韵流芳 - 雕梁画栋</title>
+   
+    <style>
+        /* 立即禁用所有动画和过渡效果 */
+        body * {
+            animation: none !important;
+            transition: none !important;
+        }
+        
+        /* 确保游戏区域元素不会闪烁 */
+        .game-area {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 95% !important;
+            height: 95% !important;
+            max-width: 1000px !important;
+            max-height: 800px !important;
+            z-index: 1000 !important;
+            margin: 0 !important;
+            animation: none !important;
+            transition: none !important;
+            display: none !important; /* 确保初始状态完全隐藏 */
+            visibility: hidden !important; /* 双重保险隐藏 */
+            opacity: 0 !important; /* 三重保险隐藏 */
+        }
+        
+        /* 确保游戏区域显示时的样式 */
+        .game-area:not(.hidden) {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* 确保隐藏元素不会有任何动画效果 */
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            animation: none !important;
+            transition: none !important;
+            opacity: 0 !important;
+        }
+        
+        /* 默认隐藏所有游戏内容 */
+        .game-content {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+        
+        /* 只有当游戏内容不是隐藏状态时才显示 */
+        .game-content:not(.hidden) {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* 全屏背景 */
+        .full-screen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* 背景图片 */
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* 游戏入口卡片样式 */
+        .game-entry {
+            position: absolute;
+            width: 120px;
+            height: 180px;
+            background-color: rgba(245, 240, 230, 0.9);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 10;
+            border: 1px solid #8c6e5d;
+            padding: 0;
+            backdrop-filter: blur(2px);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.03"><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,80)"/></svg>');
+        }
+
+        /* 卡片顶部装饰 */
+        .game-entry::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 25px;
+            background-color: #8c6e5d;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 100%);
+        }
+        
+        /* 卡片底部装饰 - 类似于印章效果 */
+        .game-entry::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(180, 40, 40, 0.7);
+            border-radius: 3px;
+            transform: rotate(45deg);
+            opacity: 0.8;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2) inset;
+        }
+
+        /* 按钮文字样式 */
+        .game-entry-text {
+            writing-mode: vertical-rl;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            font-family: 'SimSun', serif;
+            margin-top: 15px;
+            z-index: 2;
+            letter-spacing: 3px;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        /* 图标样式 */
+        .entry-icon {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 5px;
+        }
+        
+        .entry-icon img {
+            border: 2px solid #8c6e5d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .game-entry:hover .entry-icon img {
+            transform: scale(1.05);
+        }
+        
+        /* 标题样式 */
+        .entry-title {
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 悬停效果 */
+        .game-entry:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 开始游戏页面样式 */
+        .start-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/images/shouyebeijing.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .start-page-content {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #8c6e5d;
+            max-width: 70%;
+            width: 70%;
+            position: relative;
+            overflow: hidden;
+            margin-top: 50px;  /* 添加这行来使内容整体下移 */
+        }
+        
+        .start-page-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.03"><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,0)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,20)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,40)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,60)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(0,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(40,80)"/><path d="M20,0 L40,0 L20,20 L0,20 Z" fill="%23000" transform="translate(80,80)"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .game-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #6d4c41;
+            margin-bottom: 30px;
+            font-family: 'SimSun', serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .game-description {
+            font-size: 18px;
+            color: #5d4037;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .start-button {
+            background-color: #8d6e63;
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .start-button:hover {
+            background-color: #6d4c41;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .start-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 主页内容 */
+        .main-page-content {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- 开始游戏页面 -->
+    <div class="start-page" id="start-page">
+        <div class="start-page-content">
+            <h1 class="game-title">宋韵流芳 · 雕梁画栋</h1>
+            <p class="game-description">欢迎来到宋代建筑文化探索之旅！在这里，您将领略宋代建筑之美，了解营造法式的奥秘，探索古代建筑的智慧与艺术。</p>
+            
+            <!-- 增大游戏规则内容文本框 -->
+            <div class="game-rules-content" style="margin: 25px 0; padding: 40px; background-color: rgba(245, 240, 230, 0.85); border-radius: 12px; text-align: left; border: 2px solid #a67c52; box-shadow: 0 5px 15px rgba(0,0,0,0.15); max-width: 95%; margin-left: auto; margin-right: auto;">
+                <h3 style="color: #732e1c; text-align: center; margin-bottom: 25px; font-size: 26px;">建筑拼图 - 游戏规则</h3>
+                <p style="color: #5a3d30; line-height: 1.8; margin: 0; font-size: 20px; padding: 0 15px;">在建筑拼图场景中，您将通过拼接宋代建筑构件，学习宋代建筑的结构组成和艺术特色。完成拼图后，您将对宋代建筑有更直观的认识。</p>
+                <p style="color: #5a3d30; line-height: 1.8; margin-top: 20px; font-size: 20px; padding: 0 15px;">您可以选择不同的建筑图片进行拼图，通过点击拼图片调整位置，将散乱的图片拼成完整的宋代建筑图片。游戏提供模板图片供您参考，移动次数越少，表现越出色！</p>
+            </div>
+            
+            <button class="start-button" onclick="startMainPage()">开始游戏</button>
+        </div>
+    </div>
+
+    <!-- 主页内容 -->
+    <div class="container main-page-content" id="main-page-content">
+        <!-- 背景图片 -->
+        <div class="full-screen-bg">
+            <img src="assets/images/shouyebeijing.jpg" alt="宋代农耕山水画" class="bg-image">
+            <div class="paper-texture" style="opacity: 0.3;"></div>
+        </div>
+        
+        <!-- 游戏区域 -->
+        <main class="game-area hidden" style="display:none; visibility:hidden;">
+            <!-- 游戏规则区域 - 保留，但不会显示 -->
+            <div id="game-rules" class="game-content hidden" style="display:none; visibility:hidden;">
+                <div class="rules-container">
+                    <h2 id="rules-title" class="game-rules-title">游戏规则</h2>
+                    <div class="scroll-paper">
+                        <p id="rules-content" class="game-rules-content">游戏规则内容将在这里显示</p>
+                    </div>
+                    <div class="rules-buttons">
+                        <button id="enter-game-btn" class="enter-game-button">进入</button>
+                        <button id="back-to-home-btn" class="back-button" onclick="backToHome()">返回</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 游戏内容区域 -->
+            <div id="architecture-game" class="game-content hidden" style="display:none; visibility:hidden;"></div>
+        </main>
+    </div>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/architecture.js"></script>
+    
+    <script>
+        // 启动主页面
+        function startMainPage() {
+            document.getElementById('start-page').style.display = 'none';
+            document.getElementById('main-page-content').style.display = 'block';
+            
+            // 直接启动建筑拼图游戏
+            startGame('architecture', 'templeOfHeaven');
+        }
+        
+        // 简化的游戏启动函数
+        function startGame(gameType, sceneId) {
+            // 显示游戏区域
+            const gameArea = document.querySelector('.game-area');
+            gameArea.classList.remove('hidden');
+            gameArea.style.display = 'block';
+            gameArea.style.visibility = 'visible';
+            gameArea.style.opacity = '1';
+            
+            // 保存当前要加载的游戏类型和场景ID
+            window.currentGameType = gameType;
+            window.currentSceneId = sceneId;
+            
+            // 直接显示游戏内容，跳过游戏规则页面
+            const gameContent = document.getElementById(`${gameType}-game`);
+            if (gameContent) {
+                gameContent.classList.remove('hidden');
+                gameContent.style.display = 'block';
+                gameContent.style.visibility = 'visible';
+                gameContent.style.opacity = '1';
+                
+                // 调用对应游戏的初始化函数，并传递初始场景ID
+                if (gameType === 'architecture' && typeof window.initArchitectureGame === 'function') {
+                    const gameModule = window.initArchitectureGame();
+                    console.log(`游戏初始化完成，将直接进入场景: ${sceneId}`);
+                }
+            }
+        }
+        
+        // 返回主页
+        function backToHome() {
+            const gameArea = document.querySelector('.game-area');
+            const allGameContents = document.querySelectorAll('.game-content');
+            
+            // 隐藏所有游戏内容
+            allGameContents.forEach(content => {
+                content.classList.add('hidden');
+                content.style.display = 'none';
+                content.style.visibility = 'hidden';
+                content.style.opacity = '0';
+            });
+            
+            // 隐藏游戏区域
+            gameArea.classList.add('hidden');
+            gameArea.style.display = 'none';
+            gameArea.style.visibility = 'hidden';
+            gameArea.style.opacity = '0';
+        }
+    </script>
+</body>
+</html>
