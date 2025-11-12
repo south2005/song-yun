@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建筑特色 - 建筑展览馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+            overflow: hidden;
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            width: 100vw; /* 确保不会超出视口宽度 */
+        }
+        
+        .museum-header {
+            background-color: rgba(33, 26, 15, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .main-navigation {
+            width: 70%;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: space-between;
+        }
+        
+        .nav-item {
+            margin: 0;
+            position: relative;
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: var(--museum-light);
+            font-size: 16px;
+            padding: 15px 5px;
+            display: block;
+            transition: all 0.3s;
+            position: relative;
+            letter-spacing: 2px;
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-item a:hover::after {
+            width: 80%;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transform: translateX(-50%);
+        }
+        
+        .page-content {
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--header-height);
+            flex: 1;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            padding: 20px 0;
+            text-align: center;
+            margin: 0;
+        }
+        
+        .museum-footer {
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(33, 26, 15, 0.95);
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+        
+        /* 视频风格展示区域 - 全屏布局 */
+        .video-style-showcase {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - var(--header-height) - var(--footer-height));
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .video-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease;
+            background-color: transparent;
+        }
+        
+        .video-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        
+        .slide-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
+            z-index: 1;
+            filter: brightness(0.9) contrast(1.1);
+        }
+        
+        /* 左侧区域布局 */
+        .slide-content-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 100vw;
+            overflow: hidden;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            width: 90%;
+            max-width: 1400px;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            gap: 40px;
+        }
+        
+        /* 左侧标题区域 */
+        .slide-left-area {
+            width: 30%;
+            opacity: 1;
+            transition: none;
+        }
+        
+        .video-slide.active .slide-left-area {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .title-container {
+            background-color: rgba(0, 0, 0, 0);
+            padding: 35px 40px;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+            border-left: 2px solid var(--museum-gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+            transition: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .title-container:hover {
+            transform: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+        }
+        
+        .slide-year {
+            color: var(--museum-gold);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-year::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--museum-gold);
+            opacity: 0.7;
+        }
+        
+        .slide-title {
+            color: var(--museum-gold);
+            font-size: 2.8rem;
+            line-height: 1.3;
+            margin: 0;
+            padding: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 右侧内容区域 */
+        .slide-right-area {
+            width: 50%;
+            opacity: 1;
+            transition: none;
+        }
+        
+        .video-slide.active .slide-right-area {
+            transform: none;
+            opacity: 1;
+        }
+        
+        .content-container {
+            background-color: rgba(0, 0, 0, 0);
+            padding: 35px 40px;
+            border-radius: 8px;
+            backdrop-filter: blur(15px);
+            border-left: 2px solid var(--museum-gold);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+            transition: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .content-container:hover {
+            transform: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 0 15px rgba(212, 185, 110, 0.1);
+        }
+        
+        .slide-text {
+            color: var(--museum-light);
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 1);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        /* 底部大标题 */
+        .main-heading {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 80px;
+            text-align: center;
+            z-index: 5;
+        }
+        
+        .main-heading h1 {
+            font-size: 3.8rem;
+            color: var(--museum-gold);
+            margin: 0;
+            padding: 0;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            letter-spacing: 5px;
+            opacity: 0.85;
+        }
+        
+        .slide-nav-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+            transform: translateY(-50%);
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
+        
+        .slide-nav-button {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--museum-light);
+            border: 1px solid rgba(212, 185, 110, 0.4);
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        
+        .slide-nav-button:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.5);
+            border-color: var(--museum-gold);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25), 0 0 10px rgba(212, 185, 110, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .slide-nav-button:focus {
+            outline: none;
+        }
+        
+        .slide-nav-button::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
+            border-style: solid;
+            border-color: currentColor;
+            transition: all 0.2s ease;
+        }
+        
+        .slide-nav-button.prev-slide::after {
+            border-right: 0;
+            border-top: 0;
+            transform: rotate(45deg);
+            margin-left: 4px;
+        }
+        
+        .slide-nav-button.next-slide::after {
+            border-left: 0;
+            border-bottom: 0;
+            transform: rotate(45deg);
+            margin-right: 4px;
+        }
+        
+        .navigation-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 10;
+            padding: 10px 15px;
+        }
+        
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            margin: 0 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-dot.active {
+            background-color: var(--museum-gold);
+            transform: scale(1.2);
+            box-shadow: 0 0 8px rgba(212, 185, 110, 0.7);
+        }
+        
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .video-slide.active {
+            animation: fadeInScale 1s forwards;
+        }
+        
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--museum-gold), #e6d4a3);
+            width: 0;
+            z-index: 10;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(212, 185, 110, 0.5);
+        }
+        
+        /* 媒体查询，响应式布局 */
+        @media (max-width: 1200px) {
+            .content-wrapper {
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding-left: 40px;
+            }
+            
+            .slide-left-area {
+                width: 60%;
+                margin-bottom: 30px;
+            }
+            
+            .slide-right-area {
+                width: 80%;
+            }
+            
+            .main-heading {
+                bottom: 120px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .slide-left-area, .slide-right-area {
+                width: 90%;
+            }
+            
+            .slide-title {
+                font-size: 2.5rem;
+            }
+            
+            .slide-text {
+                font-size: 1.4rem;
+            }
+            
+            .main-heading h1 {
+                font-size: 3rem;
+            }
+        }
+        
+        /* 添加侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 1000;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .side-navigation .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .side-navigation .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+            padding: 0;
+        }
+        
+        .side-navigation .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .side-navigation .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .side-navigation .nav-item a:hover::before,
+        .side-navigation .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .side-navigation .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .side-navigation .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .side-navigation .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .side-navigation .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .side-navigation .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .side-navigation .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .side-navigation .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .side-navigation .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/guoshoujing/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/exhibitions.html"><i></i><span>八大建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/collection.html"><i></i><span>建筑技艺</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/works.html"><i></i><span>其他建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/education.html"><i></i><span>历史影响</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 视频风格展示区域 - 全屏布局 -->
+            <div class="video-style-showcase">
+                <div class="progress-bar" id="progressBar"></div>
+                
+                <div class="video-slide active">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2guoshoujingdansheng.jpg" alt="开封府" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">北宋</div>
+                                        <h2 class="slide-title">开封府</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">开封府是北宋时期最重要的行政中心，其建筑群规模宏大，布局严谨。府衙建筑采用典型的宋代官式建筑风格，以木构架为主，屋顶采用歇山顶，体现了宋代建筑的精湛工艺和庄重典雅的特色。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2qiuxueyuzaoqichengjiu.jpg" alt="大相国寺" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">北宋</div>
+                                        <h2 class="slide-title">大相国寺</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">大相国寺是北宋时期规模最大的皇家寺院，其建筑群布局严谨，气势恢宏。寺内的大雄宝殿采用重檐歇山顶，斗拱结构复杂精美，是宋代木构建筑的典范之作。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2chuzhanshuilicaihua.jpg" alt="应天书院" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">北宋</div>
+                                        <h2 class="slide-title">应天书院</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">应天书院是北宋四大书院之一，其建筑布局体现了宋代书院建筑的典型特征。建筑群以讲堂为中心，四周环绕着斋舍、藏书楼等建筑，整体布局严谨有序，体现了宋代教育建筑的特色。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2jinjianhubilie.jpg" alt="六和塔" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">南宋</div>
+                                        <h2 class="slide-title">六和塔</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">六和塔是南宋时期重要的佛教建筑，位于杭州钱塘江畔。塔高七层，采用砖木混合结构，是南宋时期塔式建筑的典型代表。其建筑风格融合了江南园林特色，体现了南宋建筑的精巧与优雅。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2xixiazhishui.jpg" alt="灵隐寺" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">南宋</div>
+                                        <h2 class="slide-title">灵隐寺</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">灵隐寺是南宋时期重要的佛教寺院，其建筑群依山而建，布局巧妙。寺内的大雄宝殿采用重檐歇山顶，建筑风格融合了江南园林特色，是南宋时期寺院建筑的典范。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2zhizuoshoushili.jpg" alt="岳麓书院" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">南宋</div>
+                                        <h2 class="slide-title">岳麓书院</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">岳麓书院是南宋时期重要的教育建筑，其建筑布局体现了宋代书院建筑的特色。建筑群依山而建，融合了江南园林风格，是南宋时期教育建筑的典型代表。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2kaizaotonghuihe.jpg" alt="雷峰塔" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">南宋</div>
+                                        <h2 class="slide-title">雷峰塔</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">雷峰塔是南宋时期重要的佛教建筑，位于杭州西湖畔。塔高五层，采用砖木混合结构，是南宋时期塔式建筑的典型代表。其建筑风格融合了江南园林特色，体现了南宋建筑的精巧与优雅。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-slide">
+                    <div class="slide-wrapper">
+                        <img src="/src/data/guoshoujing/images/2guoshijingqushi.jpg" alt="净慈寺" class="slide-bg">
+                        <div class="slide-content-area">
+                            <div class="content-wrapper">
+                                <div class="slide-left-area">
+                                    <div class="title-container">
+                                        <div class="slide-year">南宋</div>
+                                        <h2 class="slide-title">净慈寺</h2>
+                                    </div>
+                                </div>
+                                <div class="slide-right-area">
+                                    <div class="content-container">
+                                        <p class="slide-text">净慈寺是南宋时期重要的佛教寺院，位于杭州西湖畔。其建筑群布局严谨，建筑风格融合了江南园林特色，是南宋时期寺院建筑的典型代表。寺内的大雄宝殿采用重檐歇山顶，体现了南宋建筑的精湛工艺。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slide-nav-buttons">
+                    <button class="slide-nav-button prev-slide"></button>
+                    <button class="slide-nav-button next-slide"></button>
+                </div>
+                
+                <div class="navigation-controls">
+                    <div class="nav-dot active" data-slide="0"></div>
+                    <div class="nav-dot" data-slide="1"></div>
+                    <div class="nav-dot" data-slide="2"></div>
+                    <div class="nav-dot" data-slide="3"></div>
+                    <div class="nav-dot" data-slide="4"></div>
+                    <div class="nav-dot" data-slide="5"></div>
+                    <div class="nav-dot" data-slide="6"></div>
+                    <div class="nav-dot" data-slide="7"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© 2025 建筑展览馆（宋韵智境——数字幻境启宋韵项目） 版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.video-slide');
+            const dots = document.querySelectorAll('.nav-dot');
+            const prevBtn = document.querySelector('.prev-slide');
+            const nextBtn = document.querySelector('.next-slide');
+            const progressBar = document.getElementById('progressBar');
+            
+            // 先设置所有幻灯片的卡片透明度一致
+            slides.forEach(slide => {
+                const leftArea = slide.querySelector('.slide-left-area');
+                const rightArea = slide.querySelector('.slide-right-area');
+                if (leftArea) {
+                    leftArea.style.opacity = '1';
+                    leftArea.style.transform = 'none';
+                }
+                if (rightArea) {
+                    rightArea.style.opacity = '1';
+                    rightArea.style.transform = 'none';
+                }
+            });
+            
+            let currentSlide = 0;
+            let slideInterval;
+            const slideDelay = 8000; // 8秒切换一次
+            
+            // 初始化进度条动画
+            let progress = 0;
+            let progressInterval;
+            let isTransitioning = false;
+            
+            function resetProgressBar() {
+                clearInterval(progressInterval);
+                progress = 0;
+                progressBar.style.width = '0%';
+                isTransitioning = false;
+                
+                progressInterval = setInterval(() => {
+                    progress += 100 / (slideDelay / 100);
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        
+                        if (!isTransitioning) {
+                            isTransitioning = true;
+                            // 进度条达到100%后，再跳转到下一张幻灯片
+                            setTimeout(() => {
+                                nextSlide();
+                            }, 200); // 短暂延迟，确保进度条完全拉满
+                        }
+                    }
+                }, 100);
+            }
+            
+            function showSlide(n) {
+                // 隐藏当前幻灯片
+                slides[currentSlide].classList.remove('active');
+                dots[currentSlide].classList.remove('active');
+                
+                // 更新当前幻灯片索引
+                currentSlide = (n + slides.length) % slides.length;
+                
+                // 显示新的幻灯片
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+                
+                // 重置进度条
+                resetProgressBar();
+            }
+            
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+            
+            function prevSlide() {
+                showSlide(currentSlide - 1);
+            }
+            
+            // 设置自动播放
+            function startSlideShow() {
+                // 清除现有定时器
+                clearInterval(slideInterval);
+                // 重新开始进度条
+                resetProgressBar();
+                // 不再设置slideInterval，由进度条控制幻灯片切换
+            }
+            
+            // 点击事件监听
+            prevBtn.addEventListener('click', function() {
+                prevSlide();
+                clearInterval(progressInterval);
+                startSlideShow();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                nextSlide();
+                clearInterval(progressInterval);
+                startSlideShow();
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    showSlide(index);
+                    clearInterval(progressInterval);
+                    startSlideShow();
+                });
+            });
+            
+            // 启动幻灯片自动播放
+            startSlideShow();
+            
+            // 当用户鼠标悬停在幻灯片上时暂停播放
+            const showcaseElement = document.querySelector('.video-style-showcase');
+            showcaseElement.addEventListener('mouseenter', function() {
+                clearInterval(progressInterval);
+                isTransitioning = true; // 防止自动切换
+            });
+            
+            showcaseElement.addEventListener('mouseleave', function() {
+                isTransitioning = false;
+                startSlideShow();
+            });
+        });
+    </script>
+</body>
+</html>

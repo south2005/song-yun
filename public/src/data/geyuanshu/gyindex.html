@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>宋代瓷器翻牌游戏 🎮</title>
+    <link rel="stylesheet" href="/src/data/geyuanshu/flip-style.css">
+    <style>
+        /* 基础样式优化 */
+        body {
+            font-family: 'SimSun', '宋体', serif;
+            background-color: #f8f3e6;
+            color: #5a3e2b;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 15px;
+        }
+        .card {
+            background-color: #d9c7a7;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.4s;
+            transform-style: preserve-3d;
+            aspect-ratio: 1;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        .container {
+            margin-top: 60px; /* 为顶部导航预留空间 */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="guideModal" class="guide-modal" style="display: flex">
+        <div class="guide-content fade-in">
+            <h2>✨ 游戏规则 ✨</h2>
+            <p>欢迎来到宋代瓷器翻牌游戏！🏺🎮</p>
+            <div class="guide-rules">
+                <div>🔍 规则一：点击卡片翻面，找到两张相同的瓷器卡片进行消除。</div>
+                <div>📚 规则二：每种瓷器卡片配对成功后，可以了解该瓷器的历史背景与用途。</div>
+                <div>👑 规则三：完成所有配对后，可以查看宋代瓷器的分类。</div>
+                        </div>            <div style="text-align: center; margin-top: 25px;">                <p style="margin-bottom: 20px;">准备好开始游戏了吗？🎮</p>                <button id="guideContinueBtn" class="btn-start" style="margin: 0 auto; display: block; min-width: 150px;">开始游戏 🎮</button>            </div>        </div>
+    </div>
+    <!-- 游戏指南按钮 -->
+    <button id="showGuideBtn" class="guide-tag">🎴 游戏指南</button>
+    <div class="container" style="display:none; margin-top: 60px">
+        <header class="fade-in">
+            <h1>🎮 宋代瓷器 🎮</h1>
+            <div class="subtitle">🏺 瓷器知识探索游戏 🏺</div>
+        </header>
+        
+        <div class="game-container">
+            <div class="game-board" id="gameBoard">
+                <!-- 卡片由JavaScript动态生成 -->
+                <div class="game-over" id="gameOver">
+                    <div class="fade-in">🎉 恭喜完成！🎉</div>
+                    <!-- 展示瓷器分类 -->
+                    <div class="prescription" id="prescription">
+                        <h3>🏺 宋代经典瓷器 🏺</h3>
+                        <div class="prescription-herbs" id="prescriptionHerbs"></div>
+                        <p id="prescriptionEffect"></p>
+                    </div>
+                    <button id="restartBtn" class="btn-restart">🔄 再来一局</button>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="herb-info" id="herbInfo">
+                    <h3>🏺 瓷器知识 🏺</h3>
+                    <p>点击卡片翻面，找到两张相同的瓷器卡片进行消除。</p>
+                    <p>记住卡片的位置，尽量用最少的步数完成游戏！</p>
+                </div>
+                
+                <div class="game-stats">
+                    <div>🎴 剩余配对：<span id="pairsLeft">8</span>组</div>
+                    <div>🔄 翻牌次数：<span id="flipCount">0</span>次</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 瓷器搭配交互游戏（宋韵智境——数字幻境启宋韵项目） 版权所有 🎮</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 错误处理函数
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('脚本错误：', message, 'at', source, lineno, colno);
+            alert('游戏加载出现问题，请刷新页面或联系管理员！');
+        };
+    </script>
+    <script src="/src/data/geyuanshu/flip-data.js"></script>
+    <script src="/src/data/geyuanshu/flip-game.js"></script>
+</body>
+</html>

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史影响 - 建筑展览馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --museum-accent: #9c7a3c;
+            --museum-bg: #1a150e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+            --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239c7a3c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .museum-header {
+            background-color: rgba(20, 16, 10, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-smooth);
+        }
+        
+        .logo-emblem:hover {
+            transform: rotate(10deg);
+            background-color: var(--museum-accent);
+        }
+        
+        .logo-emblem::after {
+            content: "郭";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .page-content {
+            padding: 100px 30px 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+            padding-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--museum-gold);
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .work-intro {
+            background-color: rgba(33, 26, 15, 0.85);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border-left: 4px solid var(--museum-gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .work-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/src/data/guoshoujing/images/3mozizhengkongshiyan.jpg') no-repeat center right;
+            background-size: contain;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .work-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .category-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .category-item {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            width: 150px;
+        }
+        
+        .category-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 185, 110, 0.1) 0%, transparent 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-item:hover::before, 
+        .category-item.active::before {
+            opacity: 1;
+        }
+        
+        .category-item:hover, 
+        .category-item.active {
+            transform: translateY(-5px);
+            border-color: var(--museum-gold);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-icon {
+            font-size: 24px;
+            color: var(--museum-gold);
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-item:hover .category-icon,
+        .category-item.active .category-icon {
+            transform: scale(1.2);
+        }
+        
+        .category-name {
+            font-size: 16px;
+            text-align: center;
+            color: var(--museum-light);
+            transition: color 0.3s ease;
+        }
+        
+        .category-item:hover .category-name,
+        .category-item.active .category-name {
+            color: var(--museum-gold);
+        }
+        
+        .content-container {
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .category-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .category-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 侧边导航栏样式 - 从index.html复制过来 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 200;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .nav-item a:hover::before,
+        .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+        
+        .museum-footer {
+            background-color: rgba(33, 26, 15, 0.95);
+            padding: 15px 0;
+            text-align: center;
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            margin-top: auto;
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .copyright {
+            color: var(--museum-light);
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .copyright p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <!-- 移除这里的logo，已经移至侧边栏 -->
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/guoshoujing/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/exhibitions.html"><i></i><span>八大建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/collection.html"><i></i><span>建筑技艺</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/works.html"><i></i><span>其他建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/education.html"><i></i><span>历史影响</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <h1 class="section-title">宋代建筑的历史影响</h1>
+            
+            <div class="work-intro">
+                <p>宋代建筑不仅在中国建筑史上具有里程碑意义，还深刻影响了后世的建筑风格与技术。其结构创新、审美理念和工艺标准成为后代建筑的重要参考，对中国乃至东亚建筑文化产生了深远影响。今天，宋代建筑的美学与技术依然为现代建筑设计和文化自信提供着宝贵的启示。</p>
+            </div>
+
+            <!-- 分类导航 -->
+            <div class="category-navigation">
+                <div class="category-item active" data-category="ancient">
+                    <div class="category-icon"><i class="fa-solid fa-landmark"></i></div>
+                    <div class="category-name">古代影响</div>
+                </div>
+                <div class="category-item" data-category="modern">
+                    <div class="category-icon"><i class="fa-solid fa-building"></i></div>
+                    <div class="category-name">近现代影响</div>
+                </div>
+                <div class="category-item" data-category="value">
+                    <div class="category-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="category-name">当代价值</div>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-container">
+                <!-- 古代影响部分 -->
+                <div class="category-content active" id="ancient-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="era-marker">
+                                <span>元明清</span>
+                                <div class="era-line"></div>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-header">
+                                    <h2><i class="fa-solid fa-landmark"></i> 历代对宋代建筑的传承</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-quote">
+                                        <p>"宋制为后世法，工艺精湛，规制详明。"</p>
+                                        <span>——《营造法式》影响记载</span>
+                                    </div>
+                                    <div class="card-text">
+                                        <p>宋代建筑的结构体系、斗拱技艺、彩画装饰等被元、明、清三代广泛继承和发展。明清宫殿、寺庙、园林等建筑在规制、工艺和美学上都深受宋代影响，许多建筑规范直接沿用宋代《营造法式》的标准。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="era-marker">
+                                <span>历史文献</span>
+                                <div class="era-line"></div>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-header">
+                                    <h2><i class="fa-solid fa-scroll"></i> 史籍中的宋代建筑</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-quote">
+                                        <p>"宋人尚法度，建筑精工，制度严谨。"</p>
+                                        <span>——《东京梦华录》</span>
+                                    </div>
+                                    <div class="card-text">
+                                        <p>《东京梦华录》《营造法式》等文献详细记载了宋代建筑的结构、工艺和美学理念，为后世研究和仿建宋代建筑提供了宝贵资料。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 近现代影响部分 -->
+                <div class="category-content" id="modern-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="era-marker">
+                                <span>20世纪</span>
+                                <div class="era-line"></div>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-header">
+                                    <h2><i class="fa-solid fa-building"></i> 建筑学家的研究与复原</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-quote">
+                                        <p>"宋代建筑是中国古代建筑的高峰。"</p>
+                                        <span>——梁思成</span>
+                                    </div>
+                                    <div class="card-text">
+                                        <p>近现代建筑学家如梁思成、林徽因等对宋代建筑进行了系统研究和测绘，推动了宋代建筑遗产的保护与复原。宋代建筑的结构美学和工艺标准成为中国古建筑研究的重要对象。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="era-marker">
+                                <span>现代建筑</span>
+                                <div class="era-line"></div>
+                            </div>
+                            <div class="content-card">
+                                <div class="card-header">
+                                    <h2><i class="fa-solid fa-city"></i> 宋风在现代建筑中的应用</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-quote">
+                                        <p>"宋代建筑的简约与精致，为现代建筑设计提供了灵感。"</p>
+                                        <span>——当代建筑师</span>
+                                    </div>
+                                    <div class="card-text">
+                                        <p>许多现代建筑在结构、空间布局和装饰风格上借鉴了宋代建筑的元素，宋风园林、仿宋建筑在当代城市景观中屡见不鲜，成为中国传统文化复兴的重要组成部分。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 当代价值部分 -->
+                <div class="category-content" id="value-content">
+                    <h2 class="content-title">宋代建筑的当代价值</h2>
+                    <div class="value-grid">
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <h3>美学与创新</h3>
+                            <p>宋代建筑追求结构与美学的和谐统一，强调空间的层次感与自然融合，这些理念对现代建筑设计具有重要启示。</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <h3>绿色环保理念</h3>
+                            <p>宋代建筑注重因地制宜、材料节约和环境融合，体现了早期的可持续发展思想，对当代绿色建筑有重要借鉴意义。</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <h3>文化自信与传承</h3>
+                            <p>宋代建筑作为中华优秀传统文化的重要组成部分，增强了民族文化自信，是当代文化传承与创新的重要资源。</p>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-icon">
+                                <i class="fa-solid fa-shield-alt"></i>
+                            </div>
+                            <h3>遗产保护与活化</h3>
+                            <p>宋代建筑遗产的保护与活化利用，推动了历史文化名城和旅游产业的发展，促进了社会经济与文化的融合。</p>
+                        </div>
+                    </div>
+                    <section class="quotes-section">
+                        <h2>名家论宋代建筑</h2>
+                        <div class="quotes-container">
+                            <div class="quote-card">
+                                <div class="quote-content">
+                                    <p>"宋代建筑的结构美与空间感，至今仍是中国建筑美学的典范。"</p>
+                                </div>
+                                <div class="quote-author">
+                                    <span>——建筑学家 梁思成</span>
+                                </div>
+                            </div>
+                            <div class="quote-card">
+                                <div class="quote-content">
+                                    <p>"宋代园林的自然与人文融合，为世界园林艺术树立了典范。"</p>
+                                </div>
+                                <div class="quote-author">
+                                    <span>——园林专家 陈从周</span>
+                                </div>
+                            </div>
+                            <div class="quote-card">
+                                <div class="quote-content">
+                                    <p>"宋代建筑的工艺与规范，为后世建筑发展奠定了坚实基础。"</p>
+                                </div>
+                                <div class="quote-author">
+                                    <span>——古建研究者 罗哲文</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; 2025 建筑展览馆（宋韵智境——数字幻境启宋韵项目） 版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // 处理导航切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryItems = document.querySelectorAll('.category-item');
+            const categoryContents = document.querySelectorAll('.category-content');
+            
+            categoryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // 移除所有导航项的active类
+                    categoryItems.forEach(btn => btn.classList.remove('active'));
+                    // 移除所有内容区域的active类
+                    categoryContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 给当前点击的导航项添加active类
+                    item.classList.add('active');
+                    
+                    // 显示对应的内容区域
+                    const categoryId = item.getAttribute('data-category');
+                    document.getElementById(categoryId + '-content').classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典案例 - 建筑展览馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .museum-header {
+            background-color: rgba(20, 16, 10, 0.85);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .logo-emblem::after {
+            content: "郭";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+        }
+        
+        /* 侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 200;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .nav-item a:hover::before,
+        .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+        
+        .page-content {
+            padding: 100px 30px 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+            padding-bottom: 15px;
+        }
+        
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .story-card {
+            background-color: rgba(33, 26, 15, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(212, 185, 110, 0.2);
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--museum-gold);
+        }
+        
+        .story-image {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .story-card:hover .story-image img {
+            transform: scale(1.05);
+        }
+        
+        .story-content {
+            padding: 20px;
+        }
+        
+        .story-title {
+            color: var(--museum-gold);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .story-text {
+            margin: 0;
+            line-height: 1.7;
+        }
+        
+        .featured-story {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid var(--museum-gold);
+        }
+        
+        .featured-story-content {
+            flex: 2;
+        }
+        
+        .featured-story-image {
+            flex: 1;
+            height: 400px;
+            margin-left: 30px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .featured-story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .museum-footer {
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <!-- 移除此处的logo，已经移到侧边栏 -->
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/guoshoujing/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/exhibitions.html"><i></i><span>八大建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/collection.html"><i></i><span>建筑技艺</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/works.html"><i></i><span>其他建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/education.html"><i></i><span>历史影响</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <h1 class="section-title">宋代建筑技艺</h1>
+            
+            <div class="featured-story">
+                <div class="featured-story-content">
+                    <h2 class="story-title">《营造法式》的编撰</h2>
+                    <p class="story-text">1103年，北宋朝廷命李诫主持编撰《营造法式》，这是中国第一部完整的建筑技术专著。该书详细记载了宋代建筑的设计规范、施工技术和材料标准，包括木构架、斗拱、屋顶、彩画等各个方面。书中不仅收录了大量建筑图样，还详细说明了各种建筑构件的尺寸比例和制作方法。《营造法式》的编撰标志着中国古代建筑技术达到了一个新的高度，对后世建筑发展产生了深远影响，被誉为"中国古代建筑百科全书"。</p>
+                </div>
+                <div class="featured-story-image">
+                    <img src="/src/data/guoshoujing/images/3shoushili.jpg" alt="营造法式示意图">
+                </div>
+            </div>
+            
+            <div class="story-grid">
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3jianyitai.jpg" alt="木构架示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">木构架体系</h3>
+                        <p class="story-text">宋代建筑以木构架为主要结构体系，采用"抬梁式"和"穿斗式"两种基本形式。木构架由柱、梁、枋、檩等构件组成，通过榫卯连接，形成稳定的框架结构。这种结构不仅具有良好的抗震性能，还便于拆卸和重建。宋代木构架技术已经相当成熟，能够建造出规模宏大的建筑，如大相国寺的大雄宝殿，其跨度达到30多米，展现了宋代建筑技术的精湛水平。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3tongyunyi.jpg" alt="斗拱结构示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">斗拱艺术</h3>
+                        <p class="story-text">宋代斗拱技术达到了中国古代建筑史上的高峰。斗拱不仅具有承重功能，还兼具装饰作用。宋代斗拱形式多样，有单斗、重斗、三斗等多种形式，结构精巧，造型优美。在《营造法式》中详细记载了各种斗拱的尺寸比例和制作方法。宋代斗拱的运用使建筑更加庄重典雅，是宋代建筑艺术的重要特征。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3guanxingtai.jpg" alt="屋顶形式示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">屋顶形式</h3>
+                        <p class="story-text">宋代建筑的屋顶形式丰富多样，主要有庑殿顶、歇山顶、悬山顶、硬山顶等。其中歇山顶最为常见，其特点是屋顶四面都有坡度，形成优美的曲线。宋代屋顶的坡度适中，既美观又实用，能够有效排水。屋顶的装饰也很讲究，包括脊兽、瓦当、滴水等构件，体现了宋代建筑的精湛工艺和艺术追求。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3tongyanhe.jpg" alt="园林建筑示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">园林建筑</h3>
+                        <p class="story-text">宋代园林建筑融合了自然景观和人工建筑，形成了独特的造园艺术。园林中的建筑包括亭、台、楼、阁、廊、榭等，布局灵活，造型优美。建筑与山水、植物相互映衬，创造出诗情画意的意境。宋代园林建筑注重空间层次和景观变化，体现了"虽由人作，宛自天开"的造园理念，对后世园林建筑产生了深远影响。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3celiangdixing.jpg" alt="彩画装饰示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">彩画装饰</h3>
+                        <p class="story-text">宋代建筑彩画艺术达到了很高的水平，形成了独特的装饰风格。彩画主要应用于梁枋、斗拱、天花等部位，题材包括花卉、山水、人物等。宋代彩画色彩丰富，构图严谨，技法精湛，既具有装饰性，又富有艺术性。在《营造法式》中详细记载了彩画的绘制方法和颜料配方，为后世留下了宝贵的艺术遗产。</p>
+                    </div>
+                </div>
+                
+                <div class="story-card">
+                    <div class="story-image">
+                        <img src="/src/data/guoshoujing/images/3shuihuaiyi.jpg" alt="砖石建筑示意图">
+                    </div>
+                    <div class="story-content">
+                        <h3 class="story-title">砖石建筑</h3>
+                        <p class="story-text">宋代砖石建筑技术也有很大发展，特别是在塔、桥等建筑中。宋代砖塔采用砖砌八角形塔身，外壁镶嵌琉璃砖，结构坚固，造型优美。如开封铁塔、杭州六和塔等都是宋代砖石建筑的杰作。宋代石桥技术也很发达，能够建造跨度大、结构复杂的石拱桥，展现了宋代建筑技术的全面进步。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© 2025 建筑展览馆（宋韵智境——数字幻境启宋韵项目） 版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,1579 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迷宫游戏</title>
+    <link rel="stylesheet" type="text/css" href="css/maze.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- 页面背景 -->
+    <div class="page-background"></div>
+
+    <div class="container">
+        <div class="game-header">
+            <h1>迷宫小游戏</h1>
+            <div class="game-decoration"></div>
+        </div>
+        
+        <!-- 游戏规则说明 -->
+        <div id="game-rules" class="game-rules">
+            <div class="rules-card">
+                <h2>游戏规则说明</h2>
+                <div class="rule-content">
+                    <ul>
+                        <li><span class="rule-icon">🎮</span>这是一个迷宫闯关游戏</li>
+                        <li><span class="rule-icon">⌨️</span>使用键盘的方向键或W、A、S、D键控制红色方块移动</li>
+                        <li><span class="rule-icon">🎯</span>目标是在迷宫中收集"研、墨、润、笔"四个字，然后到达右下角的绿色终点</li>
+                        <li><span class="rule-icon">⏱️</span>游戏会记录您完成游戏所需的时间</li>
+                        <li><span class="rule-icon">📊</span>迷宫大小：16×16</li>
+                        <li><span class="rule-icon">🖌️</span>收集完四个字并到达终点即可解锁宋徽宗的《瑞鹤图》书法作品</li>
+                    </ul>
+                </div>
+                <div class="start-button-container">
+                    <button id="start-game-btn" onclick="startGame()">开始游戏</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏主界面 -->
+        <div id="game-container" class="game-container" style="display: none;">
+            <div class="game-content">
+                <div class="game-left">
+                    <div class="canvas-container">
+                        <div class="maze-wrapper">
+                            <canvas id="mycanvas"></canvas>
+                        </div>
+                        <div id="level-info" class="level-info">收集"研墨润笔"四个字，到达终点即可解锁书法作品</div>
+                    </div>
+                </div>
+
+                <div class="game-right">
+                    <div class="control-panel">
+                        <h4>游戏控制</h4>
+                        <div class="time-display">
+                            <span id="mytime" class="time-counter">00时00分00秒</span>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="game-btn continue-btn" onclick="start()">继续游戏</button>
+                            <button class="game-btn pause-btn" onclick="stop()">暂停</button>
+                            <button class="game-btn restart-btn" onclick="renovates()">重新开始</button>
+                        </div>
+                        <div class="game-tips">
+                            <p>提示：使用方向键或WASD移动红色方块，到达绿色终点即可过关</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 集字区域 -->
+                    <div class="calligraphy-collection">
+                        <h4>集字进度</h4>
+                        <div class="characters-container">
+                            <div class="character-item" id="char1">
+                                <div class="character-box locked">研</div>
+                                <span class="character-status">未获得</span>
+                            </div>
+                            <div class="character-item" id="char2">
+                                <div class="character-box locked">墨</div>
+                                <span class="character-status">未获得</span>
+                            </div>
+                            <div class="character-item" id="char3">
+                                <div class="character-box locked">润</div>
+                                <span class="character-status">未获得</span>
+                            </div>
+                            <div class="character-item" id="char4">
+                                <div class="character-box locked">笔</div>
+                                <span class="character-status">未获得</span>
+                            </div>
+                        </div>
+                        <div class="collection-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="collection-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">收集进度: <span id="collection-count">0</span>/4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="copyright">
+                <p>Copyright © 2025 迷宫小游戏 All Rights Reserved</p>
+            </footer>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var aa = 16; // 固定为16×16的迷宫
+        var level = 1;
+        var chess = null;
+        var context = null;
+        var gameStarted = false;
+        var Context = null;
+        
+        // 集字系统变量
+        var collectedChars = [false, false, false, false]; // 记录四个字的收集状态
+        var charNames = ["研", "墨", "润", "笔"]; // 四个字的名称
+        var charPositions = []; // 存储四个字的位置
+
+        var tree = [];//存放是否联通
+        var isling = [];//判断是否相连
+        
+        // 开始游戏函数，显示游戏界面，隐藏规则
+        function startGame() {
+            // 隐藏规则界面
+            document.getElementById('game-rules').style.display = 'none';
+            // 显示游戏主界面
+            document.getElementById('game-container').style.display = 'block';
+            
+            // 获取Canvas和Context
+            chess = document.getElementById("mycanvas");
+            context = chess.getContext('2d');
+            
+            // 初始化游戏状态
+            gameStarted = true;
+            initializeGame();
+            updateLevelInfo();
+            resetCollectionStatus();
+            
+            // 开始计时
+            start();
+            
+            // 设置焦点到Canvas
+            chess.focus();
+        }
+        
+        // 重置集字状态
+        function resetCollectionStatus() {
+            collectedChars = [false, false, false, false];
+            updateCollectionUI();
+        }
+        
+        // 更新集字UI
+        function updateCollectionUI() {
+            var count = 0;
+            for (var i = 0; i < 4; i++) {
+                var charBox = document.getElementById('char' + (i+1)).querySelector('.character-box');
+                var statusText = document.getElementById('char' + (i+1)).querySelector('.character-status');
+                
+                if (collectedChars[i]) {
+                    charBox.classList.remove('locked');
+                    charBox.classList.add('unlocked');
+                    statusText.textContent = "已获得";
+                    statusText.style.color = "#16a34a";
+                    count++;
+                } else {
+                    charBox.classList.remove('unlocked');
+                    charBox.classList.add('locked');
+                    statusText.textContent = "未获得";
+                    statusText.style.color = "#9ca3af";
+                }
+            }
+            
+            // 更新进度条
+            document.getElementById('collection-count').textContent = count;
+            var progressPercent = (count / 4) * 100;
+            document.getElementById('collection-progress-fill').style.width = progressPercent + '%';
+        }
+        
+        // 获得一个新字
+        function collectChar(charIndex) {
+            if (charIndex >= 0 && charIndex < 4) {
+                collectedChars[charIndex] = true;
+                updateCollectionUI();
+            }
+        }
+        
+        // 检查是否已收集全部四个字
+        function checkAllCharsCollected() {
+            for (var i = 0; i < 4; i++) {
+                if (!collectedChars[i]) return false;
+            }
+            return true;
+        }
+        
+        // 更新关卡信息
+        function updateLevelInfo() {
+            document.getElementById('level-info').innerHTML = "收集\"研墨润笔\"四个字，到达终点即可解锁宋徽宗《瑞鹤图》";
+        }
+        
+        // 初始化游戏
+        function initializeGame() {
+            // 设置画布大小
+            var canvasSize = aa * 30 + 30; // 迷宫大小 + 边距
+            chess.width = canvasSize;
+            chess.height = canvasSize;
+            
+            // 初始化树
+            for (var i = 0; i < aa; i++) {
+                tree[i] = [];
+                for (var j = 0; j < aa; j++) {
+                    tree[i][j] = -1;
+                }
+            }
+            
+            // 初始化连接
+            for (var i = 0; i < aa * aa; i++) {
+                isling[i] = [];
+                for (var j = 0; j < aa * aa; j++) {
+                    isling[i][j] = -1;
+                }
+            }
+            
+            // 清空Canvas
+            context.clearRect(0, 0, chess.width, chess.height);
+            
+            // 绘制棋盘
+            drawChessBoard();
+            
+            // 生成迷宫
+            while (search(0) != search(aa * aa - 1)) {
+                var num = parseInt(Math.random() * aa * aa);
+                var neihbour = getnei(num);
+                if (search(num) == search(neihbour)) { continue; }
+                else {
+                    isling[num][neihbour] = 1; 
+                    isling[neihbour][num] = 1;
+                    drawline(num, neihbour);
+                    union(num, neihbour);
+                }
+            }
+            
+            // 设置起点和终点
+            a = aa * 30 - 10;
+            b = aa * 30 - 10;
+            x = 20;
+            y = 20;
+            
+            // 生成四个字的位置
+            generateCharPositions();
+            
+            // 初始化玩家和终点
+            load();
+        }
+
+        // 生成四个字的位置
+        function generateCharPositions() {
+            // 找到所有从起点可达的格子
+            var reachableCells = [];
+            var visited = new Array(aa * aa).fill(false);
+            var queue = [0];
+            visited[0] = true;
+            //reachableCells.push(0); // Don't add start to reachableCells for character placement directly
+
+            while (queue.length > 0) {
+                var curr = queue.shift();
+                var x = Math.floor(curr / aa);
+                var y = curr % aa;
+                var directions = [
+                    {dx: -1, dy: 0}, // 上
+                    {dx: 1, dy: 0},  // 下
+                    {dx: 0, dy: -1}, // 左
+                    {dx: 0, dy: 1}   // 右
+                ];
+
+                for (var i = 0; i < directions.length; i++) {
+                    var nx = x + directions[i].dx;
+                    var ny = y + directions[i].dy;
+
+                    if (nx >= 0 && nx < aa && ny >= 0 && ny < aa) {
+                        var next = nx * aa + ny;
+                         if (!visited[next] && isling[curr][next] === 1) {
+                            visited[next] = true;
+                            queue.push(next);
+                            reachableCells.push(next); // Add all reachable cells (including end)
+                        }
+                    }
+                }
+            }
+
+            // 在可达格子里随机选择四个字的位置
+            charPositions = [];
+            // Filter out start (0) and end (aa*aa - 1) from the reachable cells for character placement
+            var availableCells = reachableCells.filter(pos => pos !== 0 && pos !== aa * aa - 1);
+
+            if (availableCells.length < 4) {
+                 console.error("可用于放置字的格子少于4个，无法放置所有字。Maze might be too simple or disconnected.");
+                 // Fallback: If not enough valid spots, log error and place characters at start
+                 // This indicates a significant issue with maze generation creating very few reachable cells
+                 charPositions = [0, 0, 0, 0]; // Placing at start, will likely be instant collect
+                 return;
+            }
+
+            // Randomly shuffle available cells
+            for (var i = availableCells.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = availableCells[i];
+                availableCells[i] = availableCells[j];
+                availableCells[j] = temp;
+            }
+
+            // Select the first four positions
+            charPositions = availableCells.slice(0, 4);
+        }
+
+        function drawChessBoard() {
+            context.strokeStyle = '#A77E58';
+            for (var i = 0; i < aa + 1; i++) {
+                context.beginPath();
+                context.moveTo(15 + i * 30, 15);
+                context.lineTo(15 + i * 30, 15 + 30 * aa);
+                context.stroke();
+                context.moveTo(15, 15 + i * 30);
+                context.lineTo(15 + 30 * aa, 15 + i * 30);
+                context.stroke();
+                context.closePath();
+            }
+        }
+
+        function getnei(a) {
+            var x = parseInt(a / aa);
+            var y = a % aa;
+            var myneibor = new Array();
+            if (x - 1 >= 0) { myneibor.push((x - 1) * aa + y); }
+            if (x + 1 < aa) { myneibor.push((x + 1) * aa + y); }
+            if (y + 1 < aa) { myneibor.push(x * aa + y + 1); }
+            if (y - 1 >= 0) { myneibor.push(x * aa + y - 1); }
+            var ran = parseInt(Math.random() * myneibor.length);
+            return myneibor[ran];
+        }
+        
+        function search(a) {
+            if (tree[parseInt(a / aa)][a % aa] > 0) {
+                return search(tree[parseInt(a / aa)][a % aa]);
+            }
+            else
+                return a;
+        }
+        
+        function union(a, b) {
+            var a1 = search(a);
+            var b1 = search(b);
+            if (a1 == b1) { }
+            else {
+                if (tree[parseInt(a1 / aa)][a1 % aa] < tree[parseInt(b1 / aa)][b1 % aa]) {
+                    tree[parseInt(a1 / aa)][a1 % aa] += tree[parseInt(b1 / aa)][b1 % aa];
+                    tree[parseInt(b1 / aa)][b1 % aa] = a1;
+                }
+                else {
+                    tree[parseInt(b1 / aa)][b1 % aa] += tree[parseInt(a1 / aa)][a1 % aa];
+                    tree[parseInt(a1 / aa)][a1 % aa] = b1;
+                }
+            }
+        }
+
+        function drawline(a, b) {
+            var x1 = parseInt(a / aa);
+            var y1 = a % aa;
+            var x2 = parseInt(b / aa);
+            var y2 = b % aa;
+
+            // Calculate the canvas coordinates for the two cells' centers
+            var cell1CenterX = 15 + y1 * 30 + 15; // 15 (grid offset) + col*30 + 15 (cell center offset)
+            var cell1CenterY = 15 + x1 * 30 + 15; // 15 (grid offset) + row*30 + 15 (cell center offset)
+            var cell2CenterX = 15 + y2 * 30 + 15;
+            var cell2CenterY = 15 + x2 * 30 + 15;
+
+            // Calculate the wall position between the two cells
+            // The walls are part of the initial grid lines.
+            // Vertical walls are at 15 + (col + 1) * 30
+            // Horizontal walls are at 15 + (row + 1) * 30
+
+            context.fillStyle = '#F7E9D7'; // Use the background color to clear the wall
+
+            if (x1 === x2) { // Horizontal movement (same row, different columns -> vertical wall)
+                // y1 and y2 are column indices
+                var wallX = 15 + Math.max(y1, y2) * 30; // The vertical wall is on the right of the left cell
+                var wallY = 15 + x1 * 30; // The vertical wall spans the row
+                context.clearRect(wallX - 2, wallY + 1, 4, 28); // Clear a 4x28 rectangle centered on the wall line
+                // context.fillRect(wallX - 2, wallY + 1, 4, 28); // Use fillRect with background color
+            } else { // Vertical movement (same column, different rows -> horizontal wall)
+                // x1 and x2 are row indices
+                var wallY = 15 + Math.max(x1, x2) * 30; // The horizontal wall is below the upper cell
+                var wallX = 15 + y1 * 30; // The horizontal wall spans the column
+                context.clearRect(wallX + 1, wallY - 2, 28, 4); // Clear a 28x4 rectangle centered on the wall line
+                // context.fillRect(wallX + 1, wallY - 2, 28, 4); // Use fillRect with background color
+            }
+             // Restore stroke color for future drawing (though not strictly needed if only clearing)
+             context.strokeStyle = '#A77E58';
+        }
+        
+        function load() {
+            var canvas = document.getElementById("mycanvas");
+            Context = canvas.getContext("2d");
+            
+            // 设置起点和终点位置
+            x = 20;
+            y = 20;
+            a = aa * 30 - 10;
+            b = aa * 30 - 10;
+            
+            // 绘制玩家
+            Context.fillStyle = "#8C1C13";
+            Context.fillRect(x, y, 20, 20);
+            
+            // 绘制终点
+            context.fillStyle = "#557153";
+            context.fillRect(a, b, 20, 20);
+            
+            // 绘制四个字
+            drawCharacters();
+            
+            canvas.addEventListener('keydown', doKeyDown, true);
+            window.addEventListener('keydown', doKeyDown, true);
+        }
+
+        // 绘制四个字
+        function drawCharacters() {
+            context.font = "20px 华文楷体";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            
+            for (var i = 0; i < charPositions.length; i++) {
+                if (!collectedChars[i]) {
+                    var pos = charPositions[i];
+                    var charX = (pos % aa) * 30 + 30;
+                    var charY = Math.floor(pos / aa) * 30 + 30;
+                    
+                    context.fillStyle = "#8C1C13";
+                    context.fillText(charNames[i], charX, charY);
+                }
+            }
+        }
+
+        function doKeyDown(e) {
+            if (!gameStarted) return;
+
+            var keyID = e.keyCode ? e.keyCode : e.which;
+            // Only process input if game is not paused (i == 1)
+            if (i == 1) {
+                var oldX = x;
+                var oldY = y;
+
+                // Calculate current cell index based on player position
+                // Player position (x, y) is the top-left corner of the 20x20 square
+                // The grid lines are at 15, 45, 75, ...
+                // Cell (0,0) spans x: 15-45, y: 15-45. Player at (20, 20) is in cell (0,0).
+                // Cell (row, col) starts at canvas coordinate (15 + col*30, 15 + row*30)
+                // Player at (x, y) is in cell ( (y-15)/30 , (x-15)/30 ) - adjust for 20x20 player
+                // Player's top-left (x,y) is inside cell ( (y-15)/30, (x-15)/30 )
+                // Let's use the top-left corner (x, y) for calculation, offset by 15 and divided by 30
+                var currentRow = Math.floor((y - 15) / 30);
+                var currentCol = Math.floor((x - 15) / 30);
+                var currentCellIndex = currentRow * aa + currentCol;
+
+                var targetRow = currentRow;
+                var targetCol = currentCol;
+                var canMove = false;
+
+                if (keyID === 38 || keyID === 87) { // Up
+                    targetRow = currentRow - 1;
+                    if (targetRow >= 0) {
+                        var targetCellIndex = targetRow * aa + targetCol;
+                        if (isling[currentCellIndex][targetCellIndex] === 1) {
+                            y -= 30;
+                            canMove = true;
+                        }
+                    }
+                    e.preventDefault();
+                }
+                if (keyID === 39 || keyID === 68) { // Right
+                    targetCol = currentCol + 1;
+                     if (targetCol < aa) {
+                        var targetCellIndex = targetRow * aa + targetCol;
+                        if (isling[currentCellIndex][targetCellIndex] === 1) {
+                            x += 30;
+                            canMove = true;
+                        }
+                    }
+                    e.preventDefault();
+                }
+                if (keyID === 40 || keyID === 83) { // Down
+                    targetRow = currentRow + 1;
+                    if (targetRow < aa) {
+                        var targetCellIndex = targetRow * aa + targetCol;
+                         if (isling[currentCellIndex][targetCellIndex] === 1) {
+                            y += 30;
+                            canMove = true;
+                        }
+                    }
+                    e.preventDefault();
+                }
+                if (keyID === 37 || keyID === 65) { // Left
+                    targetCol = currentCol - 1;
+                    if (targetCol >= 0) {
+                        var targetCellIndex = targetRow * aa + targetCol;
+                         if (isling[currentCellIndex][targetCellIndex] === 1) {
+                            x -= 30;
+                            canMove = true;
+                        }
+                    }
+                    e.preventDefault();
+                }
+
+                // Move the player and update if movement was possible
+                if (canMove) {
+                     // Clear the old player square
+                    Context.clearRect(oldX, oldY, 20, 20);
+                    // Draw the player at the new position
+                    Context.fillStyle = "#8C1C13";
+                    Context.fillRect(x, y, 20, 20);
+
+                    // Check for character collection at the new position
+                    checkCharCollection();
+
+                    // Redraw all characters (to make collected ones disappear)
+                    drawCharacters();
+
+                    // Check for game over condition (reaching the end)
+                    gameover();
+                    show(); // Show completion message if game is over
+                }
+            }
+        }
+
+        // 检查是否收集到字
+        function checkCharCollection() {
+            var playerPos = Math.floor((x - 20) / 30) + Math.floor((y - 20) / 30) * aa;
+            
+            for (var i = 0; i < charPositions.length; i++) {
+                if (!collectedChars[i] && playerPos === charPositions[i]) {
+                    collectedChars[i] = true;
+                    updateCollectionUI();
+                }
+            }
+        }
+        
+        var end = false;
+        
+        function gameover() {
+            if (x >= a && y >= b) {
+                // 检查是否收集完所有字
+                if (checkAllCharsCollected()) {
+                    end = true;
+                } else {
+                    // 如果没收集完所有字，显示提示
+                    alert("请先收集完所有字！");
+                    x = oldX;
+                    y = oldY;
+                }
+            }
+        }
+        
+        function show() {
+            if (end == true) {
+                stop();
+                showCompletionMessage();
+            }
+        }
+        
+        // 显示游戏完成消息，修改为展示书法作品
+        function showCompletionMessage() {
+            // 集齐最后一个字
+            collectChar(3);
+            
+            // 隐藏画布容器
+            document.querySelector('.canvas-container').style.display = 'none';
+            
+            // 清除画布
+            var canvasSize = aa * 30 + 30;
+            Context.clearRect(0, 0, canvasSize, canvasSize);
+            context.clearRect(0, 0, canvasSize, canvasSize);
+            
+            // 创建一个模态框展示通关信息和书法作品
+            var modal = document.createElement('div');
+            modal.className = 'completion-modal';
+            
+            var artworkHTML = '';
+            if (checkAllCharsCollected()) {
+                artworkHTML = `
+                    <div class="artwork-preview">
+                        <h3>恭喜解锁书法作品：宋徽宗《瑞鹤图》</h3>
+                        <div class="artwork-image">
+                            <img src="zuopingxinshang.jpg" alt="宋徽宗瑞鹤图书法作品">
+                        </div>
+                        <p class="artwork-description">《瑞鹤图》是北宋徽宗赵佶所绘画的传世名作，白鹤在中国传统文化中象征长寿和祥瑞。</p>
+                        <p class="artwork-description">宋徽宗不仅是一位皇帝，更是一位出色的艺术家，精通书法与绘画。</p>
+                        <button class="view-full-artwork" onclick="showFullArtwork()">欣赏完整作品</button>
+                    </div>
+                `;
+            }
+            
+            modal.innerHTML = `
+                <div class="completion-content">
+                    <div class="completion-header">
+                        <h2>恭喜您完成游戏！</h2>
+                        <p class="completion-time">总用时：${str}</p>
+                    </div>
+                    <div class="completion-body">
+                        <p class="completion-message">您已成功收集"研墨润笔"四个字</p>
+                        ${artworkHTML}
+                    </div>
+                    <div class="completion-footer">
+                        <button class="restart-button" onclick="renovates()">再玩一次</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // 添加显示完整书法作品的功能
+        function showFullArtwork() {
+            // 移除当前模态框
+            document.querySelector('.completion-modal').remove();
+            
+            // 创建全屏书法欣赏页面
+            var fullArtworkModal = document.createElement('div');
+            fullArtworkModal.className = 'full-artwork-modal';
+            
+            fullArtworkModal.innerHTML = `
+                <div class="full-artwork-content">
+                    <div class="artwork-header">
+                        <h2>书法作品欣赏：宋徽宗《瑞鹤图》</h2>
+                        <div class="artwork-close" onclick="closeFullArtwork()">×</div>
+                    </div>
+                    <div class="artwork-display">
+                        <img src="zuopingxinshang.jpg" alt="宋徽宗瑞鹤图书法作品">
+                    </div>
+                    <div class="artwork-info">
+                        <div class="artwork-description">
+                            <h3>作品简介</h3>
+                            <p>《瑞鹤图》是北宋徽宗赵佶所绘画的传世名作，创作于宣和三年（1112年），现藏于辽宁省博物馆。</p>
+                            <p>此画描绘了二十只白鹤翱翔于碧空中的场景，构图雄伟壮观，笔法细腻精湛。鹤在中国传统文化中象征长寿和祥瑞，故名"瑞鹤图"。</p>
+                            <p>宋徽宗赵佶精通书画，其创立的"瘦金体"书法独具一格，挺拔秀丽，如雕如琢。《瑞鹤图》中的题跋即是用瘦金体书写，展现了徽宗精湛的艺术造诣。</p>
+                            <p>此作品不仅具有极高的艺术价值，更蕴含了中国传统文化中对吉祥如意、长寿平安的美好祝愿。</p>
+                            <p>《瑞鹤图》将绘画、书法与诗文完美结合，是中国古代艺术的瑰宝，反映了宋代宫廷绘画的卓越成就和皇家审美的高雅情趣。</p>
+                        </div>
+                    </div>
+                    <button class="return-button" onclick="closeFullArtwork()">返回游戏</button>
+                </div>
+            `;
+            
+            document.body.appendChild(fullArtworkModal);
+        }
+        
+        // 关闭全屏书法欣赏页面并返回游戏规则页面
+        function closeFullArtwork() {
+            // 移除书法欣赏模态框
+            document.querySelector('.full-artwork-modal').remove();
+            
+            // 重新加载游戏并显示游戏规则页面
+            resetGame();
+        }
+        
+        // 重置游戏到初始状态，显示游戏规则页面
+        function resetGame() {
+            // 重置游戏相关变量
+            aa = 16;
+            h = m = s = 0;
+            i = 0;
+            end = false;
+            gameStarted = false;
+            
+            // 重置集字状态
+            resetCollectionStatus();
+            
+            // 隐藏游戏界面，显示规则页面
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('game-rules').style.display = 'block';
+            
+            // 清除计时器
+            clearInterval(time);
+            
+            // 更新时间显示为初始值
+            var mytime = document.getElementById('mytime');
+            if (mytime) {
+                mytime.innerHTML = "00时00分00秒";
+            }
+        }
+        
+        var h = m = s = 0;  //定义时，分，秒并初始化为0；
+        var time = 0;
+        var i = 0;
+        var str = "";
+        
+        function timer() {   //定义计时函数
+            s = s + 1;         //秒
+            if (s >= 60) {
+                s = 0;
+                m = m + 1;        //分钟
+            }
+            if (m >= 60) {
+                m = 0;
+                h = h + 1;        //小时
+            }
+            str = toDub(h) + "时" + toDub(m) + "分" + toDub(s) + "秒";
+            mytime = document.getElementById('mytime');
+            mytime.innerHTML = str;
+        }
+
+        function start() {  //开始
+            i = 1;
+            time = setInterval(timer, 1000);
+        }
+
+        function stop() {  //暂停
+            i = 0;
+            clearInterval(time);
+        }
+
+        function toDub(n) {  //补0操作
+            if (n < 10) {
+                return "0" + n;
+            }
+            else {
+                return "" + n;
+            }
+        }
+        
+        function renovates() {
+            document.location.reload();
+        }
+    </script>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', "Microsoft YaHei", "微软雅黑", sans-serif;
+            color: #593C1C;
+            background-color: #f5f0e6;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* 页面背景 - 设置beijing.png为背景图 */
+        .page-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('beijing.jpg');
+            opacity: 0.85; /* 调整透明度使内容更清晰 */
+        }
+
+        .container {
+            width: 1100px;
+            max-width: 95%;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 游戏标题样式 - 古风设计 */
+        .game-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .game-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #8C1C13;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: inline-block;
+            letter-spacing: 4px;
+            font-family: "华文行楷", "楷体", serif;
+        }
+        
+        .game-decoration {
+            height: 4px;
+            width: 120px;
+            background: linear-gradient(90deg, #8C1C13, #C46C48);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+        
+        /* 游戏规则样式 - 古风纸张效果 */
+        .game-rules {
+            display: block;
+            max-width: 800px;
+            margin: 40px auto;
+            transition: all 0.3s ease;
+        }
+        
+        .rules-card {
+            background-color: #F7E9D7;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(89, 60, 28, 0.15);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #D3AB78;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d3ab78' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .rules-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D3AB78' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 5v1H5z'/%3E%3Cpath d='M6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        
+        .rules-card h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #8C1C13;
+            margin-bottom: 30px;
+            position: relative;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .rule-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        
+        .rule-content li {
+            font-size: 16px;
+            line-height: 2;
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            color: #593C1C;
+            font-family: "宋体", serif;
+        }
+        
+        .rule-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .start-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        #start-game-btn {
+            background: linear-gradient(45deg, #8C1C13, #C46C48);
+            color: #F7E9D7;
+            border: none;
+            border-radius: 4px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(140, 28, 19, 0.3);
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        #start-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(140, 28, 19, 0.4);
+        }
+        
+        #start-game-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 10px rgba(140, 28, 19, 0.3);
+        }
+
+        /* 游戏容器样式 */
+        .game-container {
+            margin: 40px auto;
+            background-color: #F7E9D7;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(89, 60, 28, 0.15);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+            border: 1px solid #D3AB78;
+        }
+        
+        .game-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        
+        .game-left {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .game-right {
+            width: 300px;
+        }
+        
+        .canvas-container {
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .maze-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 300px;
+            background-color: #F7E9D7;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(89, 60, 28, 0.1);
+            border: 1px solid #D3AB78;
+            padding: 15px;
+        }
+        
+        canvas {
+            display: block;
+            background-color: #F7E9D7;
+            border-radius: 5px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .level-info {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            color: #8C1C13;
+            padding: 10px;
+            background-color: #F5E5C9;
+            border-radius: 4px;
+            border: 1px solid #D3AB78;
+            font-family: "华文楷体", "楷体", serif;
+        }
+
+        .control-panel {
+            background-color: #F5E5C9;
+            border-radius: 6px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(89, 60, 28, 0.05);
+            border: 1px solid #D3AB78;
+        }
+        
+        .control-panel h4 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #8C1C13;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .control-panel h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #8C1C13, #C46C48);
+            border-radius: 3px;
+        }
+        
+        .time-display {
+            background-color: #F7E9D7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(89, 60, 28, 0.05);
+            text-align: center;
+            border: 1px solid #D3AB78;
+        }
+        
+        .time-counter {
+            font-size: 16px;
+            font-weight: 600;
+            color: #593C1C;
+            font-family: "宋体", serif;
+        }
+        
+        .control-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .game-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .continue-btn {
+            background: linear-gradient(45deg, #557153, #7D8F69);
+            color: #F7E9D7;
+            box-shadow: 0 4px 12px rgba(85, 113, 83, 0.3);
+        }
+        
+        .continue-btn:hover {
+            background: linear-gradient(45deg, #465C44, #557153);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(85, 113, 83, 0.4);
+        }
+        
+        .pause-btn {
+            background: linear-gradient(45deg, #C46C48, #EDAA78);
+            color: #F7E9D7;
+            box-shadow: 0 4px 12px rgba(196, 108, 72, 0.3);
+        }
+        
+        .pause-btn:hover {
+            background: linear-gradient(45deg, #B25E3E, #C46C48);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(196, 108, 72, 0.4);
+        }
+        
+        .restart-btn {
+            background: linear-gradient(45deg, #8C1C13, #C33C25);
+            color: #F7E9D7;
+            box-shadow: 0 4px 12px rgba(140, 28, 19, 0.3);
+        }
+        
+        .restart-btn:hover {
+            background: linear-gradient(45deg, #7A1810, #8C1C13);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(140, 28, 19, 0.4);
+        }
+        
+        .game-tips {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #F7E9D7;
+            border-left: 4px solid #D3AB78;
+            border-radius: 4px;
+        }
+        
+        .game-tips p {
+            font-size: 14px;
+            color: #593C1C;
+            line-height: 1.5;
+            font-family: "宋体", serif;
+        }
+        
+        /* 版权信息 */
+        .copyright {
+            text-align: center;
+            padding: 20px 0;
+            color: #593C1C;
+            font-size: 14px;
+            margin-top: 40px;
+            border-top: 1px solid #D3AB78;
+            font-family: "宋体", serif;
+        }
+        
+        /* 集字区域样式 - 古风设计 */
+        .calligraphy-collection {
+            background-color: #F5E5C9;
+            border-radius: 6px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(89, 60, 28, 0.05);
+            margin-top: 20px;
+            border: 1px solid #D3AB78;
+        }
+        
+        .calligraphy-collection h4 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #8C1C13;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .calligraphy-collection h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #8C1C13, #C46C48);
+            border-radius: 3px;
+        }
+        
+        .characters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .character-item {
+            text-align: center;
+            width: 22%;
+        }
+        
+        .character-box {
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #F7E9D7;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(89, 60, 28, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #D3AB78;
+            font-family: "华文行楷", "楷体", serif;
+        }
+        
+        .character-box.locked {
+            color: #9C8B7A;
+            background-color: #F5E5C9;
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+        
+        .character-box.unlocked {
+            color: #8C1C13;
+            background-color: #F7E9D7;
+            border: 2px solid #8C1C13;
+            filter: grayscale(0);
+            opacity: 1;
+        }
+        
+        .character-status {
+            font-size: 12px;
+            color: #9C8B7A;
+            font-family: "宋体", serif;
+        }
+        
+        .collection-progress {
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #E7D7C1;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            border: 1px solid #D3AB78;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8C1C13, #C46C48);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 14px;
+            color: #593C1C;
+            font-family: "宋体", serif;
+        }
+        
+        /* 书法作品样式 - 古风卷轴效果 */
+        .calligraphy-artwork {
+            position: relative;
+            padding: 20px;
+            background: #F7E9D7;
+            border-radius: 8px;
+            text-align: center;
+            margin: 10px auto;
+            width: 90%;
+            border: 1px solid #D3AB78;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(89, 60, 28, 0.15);
+        }
+        
+        .calligraphy-artwork img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 5px;
+            box-shadow: 0 10px 25px rgba(89, 60, 28, 0.1);
+            border: 1px solid #D3AB78;
+        }
+        
+        .calligraphy-artwork h3 {
+            font-size: 26px;
+            margin: 20px 0;
+            color: #8C1C13;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .calligraphy-artwork p {
+            color: #593C1C;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 14px;
+            font-family: "宋体", serif;
+        }
+        
+        .calligraphy-artwork button.view-full-artwork {
+            background: linear-gradient(45deg, #8C1C13, #C46C48);
+            color: #F7E9D7;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(140, 28, 19, 0.4);
+            font-family: "华文楷体", "楷体", serif;
+            margin-top: 15px;
+        }
+        
+        .calligraphy-artwork button.view-full-artwork:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(140, 28, 19, 0.6);
+        }
+        
+        /* 关卡完成模态框 - 古风设计 */
+        .completion-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(89, 60, 28, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .completion-content {
+            background-color: #F7E9D7;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid #D3AB78;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .completion-header {
+            text-align: center;
+            border-bottom: 2px solid #D3AB78;
+            padding-bottom: 20px;
+        }
+        
+        .completion-header h2 {
+            color: #8C1C13;
+            font-size: 32px;
+            margin: 0 0 15px 0;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .completion-time {
+            color: #593C1C;
+            font-size: 20px;
+            margin: 0;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .completion-body {
+            text-align: center;
+        }
+        
+        .completion-message {
+            color: #593C1C;
+            font-size: 24px;
+            margin: 0 0 30px 0;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .artwork-preview {
+            background-color: #FDF6E9;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid #D3AB78;
+        }
+        
+        .artwork-preview h3 {
+            color: #8C1C13;
+            font-size: 26px;
+            margin: 0 0 20px 0;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .artwork-image {
+            margin: 20px 0;
+        }
+        
+        .artwork-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 2px solid #D3AB78;
+            box-shadow: 0 5px 15px rgba(89, 60, 28, 0.2);
+        }
+        
+        .artwork-description {
+            color: #593C1C;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 15px 0;
+            font-family: "宋体", serif;
+        }
+        
+        .completion-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .restart-button, .view-full-artwork {
+            background: linear-gradient(45deg, #8C1C13, #C46C48);
+            color: #F7E9D7;
+            border: none;
+            border-radius: 6px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(140, 28, 19, 0.4);
+            font-family: "华文楷体", "楷体", serif;
+        }
+        
+        .restart-button:hover, .view-full-artwork:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(140, 28, 19, 0.6);
+        }
+        
+        .view-full-artwork {
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .completion-content {
+                padding: 20px;
+            }
+            
+            .completion-header h2 {
+                font-size: 24px;
+            }
+            
+            .completion-time {
+                font-size: 16px;
+            }
+            
+            .completion-message {
+                font-size: 20px;
+            }
+            
+            .artwork-preview {
+                padding: 20px;
+            }
+            
+            .artwork-preview h3 {
+                font-size: 22px;
+            }
+            
+            .artwork-description {
+                font-size: 14px;
+            }
+            
+            .restart-button, .view-full-artwork {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .game-content {
+                flex-direction: column;
+            }
+            
+            .game-left, .game-right {
+                width: 100%;
+            }
+            
+            .game-right {
+                margin-top: 30px;
+            }
+        }
+
+        /* 全屏书法欣赏页面美化 */
+        .full-artwork-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(120deg, #f7e9d7 60%, #e6d3b3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        .full-artwork-content {
+            background: #fffbe9;
+            border-radius: 18px;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 48px 36px 36px 36px;
+            box-shadow: 0 12px 40px rgba(89,60,28,0.18), 0 2px 8px #d3ab78;
+            border: 6px double #d3ab78;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .artwork-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            border-bottom: 2px solid #d3ab78;
+            padding-bottom: 12px;
+        }
+        .artwork-header h2 {
+            color: #8C1C13;
+            font-size: 32px;
+            font-family: "华文楷体", "楷体", serif;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 1px 2px 8px #e6d3b3, 0 1px 0 #fffbe9;
+            border-bottom: 3px solid #c46c48;
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+        .artwork-close {
+            font-size: 32px;
+            color: #8C1C13;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+            background: #f7e9d7;
+            border: 1.5px solid #d3ab78;
+        }
+        .artwork-close:hover {
+            background: #c46c48;
+            color: #fffbe9;
+            border-color: #8c1c13;
+        }
+        .artwork-display {
+            text-align: center;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        .artwork-display img {
+            max-width: 100%;
+            max-height: 340px;
+            border-radius: 10px;
+            border: 3px solid #d3ab78;
+            box-shadow: 0 8px 32px rgba(140,28,19,0.13), 0 2px 8px #d3ab78;
+            background: #f7e9d7;
+            margin: 0 auto;
+            display: block;
+        }
+        .artwork-info {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+        .artwork-description {
+            background: #fdf6e9;
+            border-radius: 8px;
+            border: 1.5px solid #d3ab78;
+            padding: 22px 18px 12px 18px;
+            color: #593C1C;
+            font-size: 17px;
+            line-height: 1.8;
+            font-family: "宋体", serif;
+            box-shadow: 0 2px 8px rgba(140,28,19,0.07);
+        }
+        .artwork-description h3 {
+            color: #8C1C13;
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-family: "华文楷体", "楷体", serif;
+        }
+        .return-button {
+            background: linear-gradient(45deg, #8C1C13, #C46C48);
+            color: #F7E9D7;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 38px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(140, 28, 19, 0.18);
+            font-family: "华文楷体", "楷体", serif;
+            margin-top: 18px;
+        }
+        .return-button:hover {
+            background: linear-gradient(45deg, #C46C48, #8C1C13);
+            color: #fffbe9;
+            box-shadow: 0 8px 20px rgba(140, 28, 19, 0.22);
+        }
+        @media (max-width: 600px) {
+            .full-artwork-content {
+                padding: 18px 4vw 18px 4vw;
+            }
+            .artwork-header h2 {
+                font-size: 20px;
+            }
+            .artwork-display img {
+                max-height: 180px;
+            }
+            .artwork-description {
+                font-size: 14px;
+                padding: 10px 6px 8px 6px;
+            }
+            .return-button {
+                padding: 10px 18px;
+                font-size: 15px;
+            }
+        }
+    </style>
+
+</body>
+
+</html>

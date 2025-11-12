@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建筑技艺 - 建筑展览馆</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --museum-accent: #9c7a3c;
+            --museum-bg: #1a150e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --sidebar-width: 180px;
+            --transition-smooth: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+            line-height: 1.7;
+            scroll-behavior: smooth;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239c7a3c' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .museum-header {
+            background-color: rgba(20, 16, 10, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: var(--header-height);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            width: 25%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-smooth);
+        }
+        
+        .logo-emblem:hover {
+            transform: rotate(10deg);
+            background-color: var(--museum-accent);
+        }
+        
+        .logo-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-navigation {
+            width: 70%;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            justify-content: space-between;
+        }
+        
+        .nav-item {
+            margin: 0;
+            position: relative;
+            text-align: center;
+            padding: 0 15px;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: var(--museum-light);
+            font-size: 16px;
+            padding: 15px 5px;
+            display: block;
+            transition: var(--transition-smooth);
+            position: relative;
+            letter-spacing: 2px;
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transition: var(--transition-smooth);
+            transform: translateX(-50%);
+        }
+        
+        .nav-item a:hover::after {
+            width: 80%;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+        }
+        
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--museum-gold);
+            transform: translateX(-50%);
+        }
+        
+        .page-content {
+            padding: 100px 30px 70px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        
+        .section-title {
+            color: var(--museum-gold);
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+            padding-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background-color: var(--museum-gold);
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .work-intro {
+            background-color: rgba(33, 26, 15, 0.85);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 60px;
+            border-left: 4px solid var(--museum-gold);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .work-intro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/src/data/guoshoujing/images/4shoushili.jpg') no-repeat center right;
+            background-size: contain;
+            opacity: 0.08;
+            z-index: -1;
+            filter: brightness(1.2) contrast(0.9);
+        }
+        
+        .work-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tabs-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 60px;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--museum-gold) var(--museum-dark);
+        }
+        
+        .tab-button {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            color: var(--museum-light);
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--museum-gold);
+            transition: var(--transition-smooth);
+        }
+        
+        .tab-button:hover {
+            color: var(--museum-gold);
+        }
+        
+        .tab-button:hover::after {
+            width: 100%;
+        }
+        
+        .tab-button.active {
+            color: var(--museum-gold);
+            font-weight: 600;
+        }
+        
+        .tab-button.active::after {
+            width: 100%;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .work-section {
+            margin-bottom: 20px;
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition-smooth);
+            border-left: 3px solid var(--museum-gold);
+        }
+        
+        .work-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .work-section-title {
+            color: var(--museum-gold);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .work-section-title i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .work-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+        
+        .work-image {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .work-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition-smooth);
+        }
+        
+        .work-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        .work-details {
+            flex: 2;
+        }
+        
+        .quote-box {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            position: relative;
+            border-left: 3px solid var(--museum-gold);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quote-box::before {
+            content: "\201C";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 60px;
+            color: rgba(212, 185, 110, 0.2);
+            font-family: serif;
+        }
+        
+        .quote-content {
+            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.8;
+            text-indent: 2em;
+        }
+        
+        .quote-source {
+            font-weight: bold;
+            text-align: right;
+            color: var(--museum-gold);
+        }
+        
+        .analysis {
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+        
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .principle-card {
+            background-color: rgba(33, 26, 15, 0.75);
+            border-radius: 10px;
+            padding: 25px;
+            border-top: 3px solid var(--museum-gold);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 185, 110, 0.05) 0%, transparent 100%);
+            z-index: -1;
+        }
+        
+        .principle-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .principle-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(212, 185, 110, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            transition: var(--transition-smooth);
+        }
+        
+        .principle-card:hover .principle-icon {
+            background-color: rgba(212, 185, 110, 0.3);
+            transform: rotate(10deg);
+        }
+        
+        .principle-icon i {
+            color: var(--museum-gold);
+            font-size: 24px;
+        }
+        
+        .principle-title {
+            color: var(--museum-gold);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .principle-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--museum-gold);
+        }
+        
+        .principle-desc {
+            margin: 0;
+            line-height: 1.7;
+        }
+        
+        .museum-footer {
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.9);
+            position: relative;
+            z-index: 100;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .work-content {
+                flex-direction: column;
+            }
+            
+            .work-image {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .principles-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+        
+        /* 添加侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 200;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .side-navigation .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .side-navigation .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+            padding: 0;
+        }
+        
+        .side-navigation .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .side-navigation .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .side-navigation .nav-item a:hover::before,
+        .side-navigation .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .side-navigation .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .side-navigation .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .side-navigation .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .side-navigation .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .side-navigation .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .side-navigation .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .side-navigation .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .side-navigation .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .side-navigation .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+        
+        /* 新的导航和内容样式 */
+        .category-navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .category-item {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 10px;
+            padding: 15px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            width: 150px;
+        }
+        
+        .category-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 185, 110, 0.1) 0%, transparent 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-item:hover::before, 
+        .category-item.active::before {
+            opacity: 1;
+        }
+        
+        .category-item:hover, 
+        .category-item.active {
+            transform: translateY(-5px);
+            border-color: var(--museum-gold);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-icon {
+            font-size: 24px;
+            color: var(--museum-gold);
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-item:hover .category-icon,
+        .category-item.active .category-icon {
+            transform: scale(1.2);
+        }
+        
+        .category-name {
+            font-size: 16px;
+            text-align: center;
+            color: var(--museum-light);
+            transition: color 0.3s ease;
+        }
+        
+        .category-item:hover .category-name,
+        .category-item.active .category-name {
+            color: var(--museum-gold);
+        }
+        
+        .content-container {
+            position: relative;
+            min-height: 500px;
+        }
+        
+        .category-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .category-content.active {
+            display: block;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        
+        .content-card {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 3px solid var(--museum-gold);
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+        
+        .card-header {
+            background-color: rgba(33, 26, 15, 0.9);
+            padding: 15px 25px;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.3);
+        }
+        
+        .card-header h2 {
+            color: var(--museum-gold);
+            margin: 0;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-header h2 i {
+            margin-right: 15px;
+        }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0,0,0,0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            background: transparent;
+            display: block;
+        }
+        
+        .content-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .card-quote {
+            background-color: rgba(33, 26, 15, 0.6);
+            border-left: 3px solid var(--museum-gold);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .card-quote::before {
+            content: "\201C";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 60px;
+            color: rgba(212, 185, 110, 0.2);
+            line-height: 1;
+        }
+        
+        .card-quote p {
+            font-style: italic;
+            margin: 0 0 10px 0;
+            text-indent: 2em;
+        }
+        
+        .card-quote span {
+            display: block;
+            text-align: right;
+            color: var(--museum-gold);
+            font-weight: 500;
+        }
+        
+        .card-text {
+            line-height: 1.8;
+        }
+        
+        .card-text p {
+            margin-bottom: 20px;
+        }
+        
+        .card-text p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .content-title {
+            color: var(--museum-gold);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .instruments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .instrument-card {
+            background-color: rgba(33, 26, 15, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid var(--museum-gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .instrument-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 185, 110, 0.05) 0%, transparent 100%);
+            z-index: -1;
+        }
+        
+        .instrument-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .instrument-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(212, 185, 110, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .instrument-card:hover .instrument-icon {
+            transform: rotate(15deg);
+        }
+        
+        .instrument-icon i {
+            color: var(--museum-gold);
+            font-size: 22px;
+        }
+        
+        .instrument-card h3 {
+            color: var(--museum-gold);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .instrument-card h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--museum-gold);
+        }
+        
+        .instrument-card p {
+            margin: 0;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 768px) {
+            .category-navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-item {
+                width: 80%;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 12px 15px;
+            }
+            
+            .category-icon {
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
+            
+            .instruments-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">建筑展览馆</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/src/data/guoshoujing/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/exhibitions.html"><i></i><span>八大建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/collection.html"><i></i><span>建筑技艺</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/works.html"><i></i><span>其他建筑</span></a></li>
+                <li class="nav-item"><a href="/src/data/guoshoujing/education.html"><i></i><span>历史影响</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <h1 class="section-title">宋代其他建筑</h1>
+            
+            <div class="work-intro">
+                <p>宋代建筑在中国建筑史上占有重要地位，从皇家宫殿到民间建筑，都展现出独特的艺术风格和精湛的建造技艺。这些建筑不仅反映了宋代的社会文化，也体现了当时建筑技术的最高水平。</p>
+            </div>
+                                    <!-- 增大视频窗口的尺寸 -->
+                                    <div class="video-section" style="text-align:center; margin: 40px 0;">
+                                        <h2 style="color: var(--museum-gold); margin-bottom: 20px;">古今建筑交互视频</h2>
+                                        <div class="video-container" style="position: relative; display: inline-block;">
+                                            <video id="ceramic-video" controls poster="/src/data/guoshoujing/images/build-video-cover.jpg" style="max-width: 100%; width: 1000px; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);">
+                                                <source src="/src/data/guoshoujing/images/build-video.mp4" type="video/mp4">
+                                                您的浏览器不支持视频播放。
+                                            </video>
+                                        </div>
+                                    </div>
+            <!-- 新的导航和分类设计 -->
+            <div class="category-navigation">
+                <div class="category-item active" data-category="palace">
+                    <div class="category-icon"><i class="fas fa-landmark"></i></div>
+                    <div class="category-name">皇家建筑</div>
+                </div>
+                <div class="category-item" data-category="temple">
+                    <div class="category-icon"><i class="fa-solid fa-torii-gate"></i></div>
+                    <div class="category-name">宗教建筑</div>
+                </div>
+                <div class="category-item" data-category="garden">
+                    <div class="category-icon"><i class="fas fa-tree"></i></div>
+                    <div class="category-name">园林建筑</div>
+                </div>
+            </div>
+            
+            <!-- 内容区域 -->
+            <div class="content-container">
+                <!-- 皇家建筑部分 -->
+                <div class="category-content active" id="palace-content">
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-landmark"></i> 延庆观</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4jianyitai.jpg" alt="延庆观">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"延庆观，北宋皇家道观，建筑精美，布局严谨。"</p>
+                                    <span>——《东京梦华录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>延庆观是北宋时期重要的皇家道观，其建筑群规模宏大，布局严谨。观内建筑采用典型的宋代官式建筑风格，以木构架为主，屋顶采用歇山顶，体现了宋代建筑的精湛工艺和庄重典雅的特色。</p>
+                                    <p>建筑群包括山门、三清殿、玉皇殿等，整体布局对称，层次分明。建筑装饰精美，彩画、雕刻等艺术手法运用得当，展现了宋代建筑的艺术成就。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-archway"></i> 天宁寺</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4tongyunyi.jpg" alt="天宁寺">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"天宁寺，北宋皇家寺院，建筑宏伟，装饰精美。"</p>
+                                    <span>——《东京梦华录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>天宁寺是北宋时期重要的皇家寺院，位于开封城内。建筑采用重檐歇山顶，斗拱结构复杂精美，是宋代木构建筑的典范之作。建筑装饰华丽，彩画、雕刻等艺术手法运用得当。</p>
+                                    <p>寺院建筑群包括山门、天王殿、大雄宝殿等，整体布局严谨，空间层次分明，体现了宋代皇家建筑的庄重与典雅。其建筑技术和艺术成就对后世产生了深远影响。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 宗教建筑部分 -->
+                <div class="category-content" id="temple-content">
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-torii-gate"></i> 繁塔</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4guanxingtai.jpg" alt="繁塔">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"繁塔，北宋佛教建筑，结构精巧，装饰精美。"</p>
+                                    <span>——《东京梦华录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>繁塔是北宋时期重要的佛教建筑，位于开封城内。塔高九层，采用砖木混合结构，是宋代塔式建筑的典型代表。建筑装饰精美，雕刻、彩画等艺术手法运用得当。</p>
+                                    <p>塔身结构精巧，每层都有精美的浮雕和彩画装饰，展现了宋代建筑的精湛工艺。其建筑风格和艺术成就对后世产生了深远影响。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-torii-gate"></i> 保俶塔</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4ushili.jpg" alt="保俶塔">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"保俶塔，南宋佛教建筑，造型优美，工艺精湛。"</p>
+                                    <span>——《梦粱录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>保俶塔是南宋时期重要的佛教建筑，位于杭州西湖边。塔高七层，采用砖木混合结构，是宋代塔式建筑的典型代表。建筑装饰精美，雕刻、彩画等艺术手法运用得当。</p>
+                                    <p>塔身造型优美，每层都有精美的浮雕和彩画装饰，展现了宋代建筑的精湛工艺。其建筑风格和艺术成就对后世产生了深远影响。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 园林建筑部分 -->
+                <div class="category-content" id="garden-content">
+                    <div class="content-grid">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-tree"></i> 白鹿洞书院</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4celiangdixing.jpg" alt="白鹿洞书院">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"白鹿洞书院，南宋四大书院之一，建筑典雅，环境优美。"</p>
+                                    <span>——《梦粱录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>白鹿洞书院是南宋四大书院之一，其建筑布局体现了宋代书院建筑的典型特征。建筑群以讲堂为中心，四周环绕着斋舍、藏书楼等建筑，整体布局严谨有序。</p>
+                                    <p>书院建筑采用典型的宋代建筑风格，以木构架为主，屋顶采用歇山顶。建筑装饰简洁大方，体现了宋代书院建筑的特色。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h2><i class="fas fa-water"></i> 沧浪亭</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-image">
+                                    <img src="/src/data/guoshoujing/images/4shuihuaiyi.jpg" alt="沧浪亭">
+                                </div>
+                                <div class="card-quote">
+                                    <p>"沧浪亭，南宋园林之典范，建筑精美，环境优美。"</p>
+                                    <span>——《梦粱录》</span>
+                                </div>
+                                <div class="card-text">
+                                    <p>沧浪亭是南宋时期重要的园林建筑，位于苏州。园林布局巧妙，建筑与自然景观融为一体，体现了宋代园林建筑的特色。</p>
+                                    <p>园林建筑采用典型的宋代建筑风格，以木构架为主，屋顶采用歇山顶。建筑装饰精美，彩画、雕刻等艺术手法运用得当，展现了宋代建筑的艺术成就。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>© 2025 建筑展览馆（宋韵智境——数字幻境启宋韵项目） 版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // 处理选项卡切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryItems = document.querySelectorAll('.category-item');
+            const categoryContents = document.querySelectorAll('.category-content');
+            
+            categoryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // 移除所有导航项的active类
+                    categoryItems.forEach(btn => btn.classList.remove('active'));
+                    // 移除所有内容区域的active类
+                    categoryContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 给当前点击的导航项添加active类
+                    item.classList.add('active');
+                    
+                    // 显示对应的内容区域
+                    const categoryId = item.getAttribute('data-category');
+                    document.getElementById(categoryId + '-content').classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

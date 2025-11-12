@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服饰文化展</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --museum-dark: #211a0f;
+            --museum-light: #f5f2e9;
+            --museum-gold: #d4b96e;
+            --header-height: 70px;
+            --footer-height: 50px;
+            --main-content-height: calc(100vh - var(--header-height) - var(--footer-height));
+            --sidebar-width: 180px;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--museum-dark);
+            color: var(--museum-light);
+        }
+
+        /* 加载页面样式 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--museum-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .loading-logo::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 40px;
+        }
+        
+        .progress-container {
+            width: 300px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--museum-gold);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.1s ease;
+        }
+        
+        .loading-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--museum-light);
+            letter-spacing: 2px;
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-height: 100vh;
+            position: relative;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .museum-header {
+            flex: 0 0 auto;
+            background-color: rgba(20, 16, 10, 0.85);
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 70px;
+        }
+        
+        .header-top {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            width: 100%;
+        }
+        
+        .museum-logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            position: relative;
+        }
+        
+        .logo-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--museum-gold);
+            white-space: nowrap;
+        }
+        
+        .logo-subtitle {
+            display: none;
+        }
+        
+        /* 侧边导航栏样式 */
+        .side-navigation {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: var(--sidebar-width);
+            background-color: rgba(33, 26, 15, 0.7);
+            z-index: 200;
+            border-radius: 20px 0 0 20px;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform: translateX(calc(var(--sidebar-width) - 25px)) translateY(-50%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 0 30px rgba(212, 185, 110, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-navigation:hover {
+            transform: translateX(0) translateY(-50%);
+        }
+        
+        .side-logo {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 185, 110, 0.2);
+            margin-bottom: 10px;
+            background-color: rgba(33, 26, 15, 0.5);
+        }
+        
+        .side-logo .museum-logo {
+            justify-content: center;
+            padding-left: 20px;
+        }
+        
+        .side-logo .logo-emblem {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .side-logo .logo-emblem::after {
+            font-size: 18px;
+        }
+        
+        .side-logo .logo-title {
+            font-size: 16px;
+        }
+        
+        .nav-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(90deg, 
+                        rgba(212, 185, 110, 0.2) 0%, 
+                        rgba(33, 26, 15, 0.3) 100%);
+        }
+        
+        .nav-toggle::before {
+            content: "◂";
+            color: var(--museum-gold);
+            font-size: 15px;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        
+        .side-navigation:hover .nav-toggle::before {
+            transform: rotateY(180deg);
+            opacity: 1;
+        }
+        
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            padding: 10px 0 25px 0;
+            margin: 0;
+            background: linear-gradient(90deg, 
+                        rgba(33, 26, 15, 0.4) 0%, 
+                        rgba(33, 26, 15, 0.9) 100%);
+            flex: 1;
+        }
+        
+        .nav-item {
+            margin: 5px 0;
+            position: relative;
+            text-align: left;
+        }
+        
+        .nav-item a {
+            text-decoration: none;
+            color: rgba(245, 242, 233, 0.85);
+            font-size: 16px;
+            padding: 12px 20px 12px 30px;
+            display: block;
+            transition: all 0.4s;
+            position: relative;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--museum-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            opacity: 0.7;
+        }
+        
+        .nav-item a:hover::before,
+        .nav-item.active a::before {
+            transform: scaleY(1);
+        }
+        
+        .nav-item a:hover {
+            color: var(--museum-gold);
+            background-color: rgba(33, 26, 15, 0.6);
+            text-shadow: 0 0 10px rgba(212, 185, 110, 0.5);
+            padding-left: 35px;
+        }
+        
+        .nav-item.active a {
+            color: var(--museum-gold);
+            text-shadow: 0 0 8px rgba(212, 185, 110, 0.4);
+        }
+        
+        .nav-item a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                        transparent, 
+                        rgba(212, 185, 110, 0.1), 
+                        transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .nav-item a:hover::after {
+            transform: translateX(100%);
+        }
+        
+        /* 导航项图标 */
+        .nav-item a span {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-item a i {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.8;
+            transition: all 0.3s;
+            transform: translateY(-2px);
+        }
+        
+        .nav-item a:hover i {
+            opacity: 1;
+            transform: translateY(-2px) scale(1.1);
+        }
+        
+        .nav-item:nth-child(1) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(2) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(3) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.35,20.65 15.8,20 17.5,20C19.15,20 20.85,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 13.35,18.65 12,19.5V8C13.35,7.15 15.8,6.5 17.5,6.5C18.7,6.5 19.9,6.65 21,7V18.5Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(4) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M18,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V4A2,2 0 0,0 18,2M6,4H11V12L8.5,10.5L6,12V4Z'/%3E%3C/svg%3E");
+        }
+        
+        .nav-item:nth-child(5) a i {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d4b96e'%3E%3Cpath d='M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z'/%3E%3C/svg%3E");
+        }
+
+        .hero-section {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: url('/src/data/lishizheng/images/1yaoshenglishizheng.jpg') no-repeat;
+            background-size: cover;
+            background-position: center center;
+            display: flex;
+            align-items: center;
+        }
+        
+        .museum-footer {
+            flex: 0 0 auto;
+            height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 0 30px;
+        }
+        
+        .footer-logo {
+            display: none;
+        }
+        
+        .footer-emblem {
+            width: 30px;
+            height: 30px;
+            background-color: var(--museum-gold);
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+        }
+        
+        .footer-emblem::after {
+            content: "宋";
+            color: var(--museum-dark);
+            font-size: 16px;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .hero-content {
+            position: relative;
+            margin-left: 5%;
+            z-index: 20;
+            width: 45%;
+            text-align: left;
+            padding-top: 120px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--museum-light);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            background: rgba(33, 26, 15, 0.7);
+            border-radius: 8px;
+            padding: 25px;
+            color: var(--museum-light);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--museum-gold);
+            max-width: 600px;
+            backdrop-filter: blur(3px);
+        }
+        
+        /* 添加暗色渐变层，增强内容可读性 */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+            z-index: 10;
+        }
+        
+        .submenu {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载屏幕 -->
+    <div class="loading-screen">
+        <div class="loading-logo"></div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="loading-text">正在进入宋代服饰文化展览馆...</div>
+    </div>
+
+    <div class="main-container" id="main-content">
+        <!-- 博物馆顶部导航 -->
+        <header class="museum-header">
+            <div class="header-top">
+                <!-- 移除此处的logo，已经移到侧边栏 -->
+            </div>
+        </header>
+
+        <!-- 侧边导航栏 -->
+        <nav class="side-navigation">
+            <div class="nav-toggle"></div>
+            <div class="side-logo">
+                <div class="museum-logo">
+                    <div class="logo-emblem"></div>
+                    <div class="logo-text">
+                        <span class="logo-title">服饰文化展</span>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active"><a href="/src/data/lishizheng/index.html"><i></i><span>首页</span></a></li>
+                <li class="nav-item"><a href="/src/data/lishizheng/biography.html"><i></i><span>服饰展示</span></a></li>
+                <li class="nav-item"><a href="/src/data/lishizheng/collection.html"><i></i><span>美学服饰</span></a></li>
+                <li class="nav-item"><a href="/src/data/lishizheng/events.html"><i></i><span>即刻设计</span></a></li>
+                <li class="nav-item"><a href="/src/data/lishizheng/education.html"><i></i><span>传承创新</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- 首页主视觉区域 -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">宋代服饰文化</h1>
+                <p class="hero-description">宋代（960年-1279年）是中国历史上经济、文化高度繁荣的时期，服饰文化尤为丰富多彩。宋代服饰以简约、雅致、实用为主要特色，注重衣着的层次与质感，体现了儒家审美和社会礼仪。无论是士大夫的宽袍大袖，还是市井百姓的便装，均展现出宋人追求自然、内敛的生活态度。宋代女性服饰尤为精致，流行对襟、长裙、披帛等款式，色彩淡雅，纹饰典雅。宋代服饰不仅影响了后世中国服饰的发展，也成为中华服饰文化的重要组成部分。</p>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="museum-footer">
+            <div class="footer-bottom">
+                <div class="footer-logo">
+                    <div class="footer-emblem"></div>
+                    <span>服饰文化展览馆</span>
+                </div>
+                <div class="copyright">
+                    <p>© 2025 宋代服饰文化展览馆（宋韵智境——数字幻境启宋韵项目） 版权所有</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBar = document.getElementById('progress-bar');
+            const loadingScreen = document.querySelector('.loading-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            let progress = 0;
+            const interval = setInterval(function() {
+                progress += Math.random() * 3;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // 加载完成后，隐藏加载屏幕，显示主内容
+                    setTimeout(function() {
+                        loadingScreen.style.opacity = '0';
+                        mainContent.style.opacity = '1';
+                        
+                        setTimeout(function() {
+                            loadingScreen.style.display = 'none';
+                        }, 500);
+                    }, 300);
+                }
+                progressBar.style.width = progress + '%';
+            }, 50);
+        });
+    </script>
+</body>
+</html>
